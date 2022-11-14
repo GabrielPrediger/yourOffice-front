@@ -12,7 +12,7 @@ export default function CreateClienteComponent() {
         <SidebarWithHeader>
             <Flex justifyContent="center" alignItems="center">
                 <Flex flexDirection="column" gap="10" p="10">
-                    <Link to="/cliente" style={{ width: "max-content" }}>
+                    <Link to="/clientes" style={{ width: "max-content" }}>
                         <Flex align="center" gap="2">
                             <Image as={FiArrowLeft} size={24} />
                             <Text w="max-content">Voltar</Text>

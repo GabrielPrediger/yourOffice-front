@@ -14,7 +14,7 @@ const SaidaPage = () => {
                         <Text fontSize="lg">Criar Saida</Text>
                     </Flex>
                 </Link>
-                <Link to="/listar-saida">
+                <Link to="/listar-saidas">
                     <Flex w="max-content" h="max-content" bgColor={theme.colors.brown} p="2" borderRadius="0.5rem" alignItems="center">
                         <Text fontSize="lg">Listar Saida</Text>
                     </Flex>

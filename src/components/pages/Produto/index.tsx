@@ -14,7 +14,7 @@ const ProdutoPage = () => {
                         <Text fontSize="lg">Criar Produto</Text>
                     </Flex>
                 </Link>
-                <Link to="/listar-produto">
+                <Link to="/listar-produtos">
                     <Flex w="max-content" h="max-content" bgColor={theme.colors.brown} p="2" borderRadius="0.5rem" alignItems="center">
                         <Text fontSize="lg">Listar Produto</Text>
                     </Flex>
