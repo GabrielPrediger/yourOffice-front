@@ -14,7 +14,7 @@ const EntradaPage = () => {
                         <Text fontSize="lg">Criar Entrada</Text>
                     </Flex>
                 </Link>
-                <Link to="/listar-entradas">
+                <Link to="/listar-entrada">
                     <Flex w="max-content" h="max-content" bgColor={theme.colors.brown} p="2" borderRadius="0.5rem" alignItems="center">
                         <Text fontSize="lg">Listar Entrada</Text>
                     </Flex>

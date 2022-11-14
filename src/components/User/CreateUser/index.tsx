@@ -12,7 +12,7 @@ export default function CreateUserComponent() {
         <SidebarWithHeader>
             <Flex justifyContent="center" alignItems="center">
                 <Flex flexDirection="column" gap="10" p="10">
-                    <Link to="/usuarios" style={{ width: "max-content" }}>
+                    <Link to="/usuario" style={{ width: "max-content" }}>
                         <Flex align="center" gap="2">
                             <Image as={FiArrowLeft} size={24} />
                             <Text w="max-content">Voltar</Text>
@@ -20,15 +20,15 @@ export default function CreateUserComponent() {
                     </Link>
                     <Flex flexDirection="column" gap="2">
                         <Text>Usuario</Text>
-                        <Input w="25rem" h="max" py="2" size={"lg"} type="text" />
+                        <Input w="25rem" h="max" py="2" size={"lg"} />
                     </Flex>
                     <Flex flexDirection="column" gap="2">
                         <Text>Senha</Text>
-                        <Input w="25rem" h="max" py="2" size={"lg"} type="password" />
+                        <Input w="25rem" h="max" py="2" size={"lg"} />
                     </Flex>
                     <Flex flexDirection="column" gap="2">
                         <Text>Email</Text>
-                        <Input w="25rem" h="max" py="2" size={"lg"} type="email" />
+                        <Input w="25rem" h="max" py="2" size={"lg"} />
                     </Flex>
                     <Flex flexDirection="column" gap="2">
                         <Text>Permissão</Text>

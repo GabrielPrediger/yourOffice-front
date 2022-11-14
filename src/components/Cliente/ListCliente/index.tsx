@@ -12,7 +12,7 @@ export default function ListCliente() {
 
     return (
         <SidebarWithHeader>
-            <Link to="/clientes" style={{ width: "max-content" }}>
+            <Link to="/cliente" style={{ width: "max-content" }}>
                 <Flex align="center" gap="2" my="1rem">
                     <Image as={FiArrowLeft} size={24} />
                     <Text w="max-content">Voltar</Text>

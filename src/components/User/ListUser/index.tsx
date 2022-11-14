@@ -12,7 +12,7 @@ export default function ListUser() {
 
     return (
         <SidebarWithHeader>
-            <Link to="/usuarios" style={{ width: "max-content" }}>
+            <Link to="/usuario" style={{ width: "max-content" }}>
                 <Flex align="center" gap="2" my="1rem">
                     <Image as={FiArrowLeft} size={24} />
                     <Text w="max-content">Voltar</Text>
