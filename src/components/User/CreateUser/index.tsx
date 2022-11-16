@@ -1,25 +1,25 @@
-import { Button, Flex, Image, Input, Select, Stack, Text } from "@chakra-ui/react";
+import { Button, Flex, FormControl, Image, Input, Select, Stack, Text } from "@chakra-ui/react";
 import { FiArrowLeft } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import { usePicasso } from "../../../hooks/usePicasso";
 import SidebarWithHeader from "../../Sidebar";
 import { useEffect, useState } from "react";
 import api from "../../../services/api";
+import { useForm } from "react-hook-form";
 
 export default function CreateUserComponent() {
 
     const theme = usePicasso();
+    const { register, handleSubmit } = useForm();
 
-    const [createUser, setCreateUser] = useState([]);
-
-    useEffect(() => {
-    api
-        .get("/get-user")
-        .then((response) => setCreateUser(response.data))
-        .catch((err) => {
+    const onSubmitForm = (data: any) => {
+        api
+        .post("/create-user", { usuario: data.usuario, senha: data.senha, email: data.email, permissao: data.permissao })
+        .then((response: any) => console.log(response))
+        .catch((err: any) => {
         console.error("ops! ocorreu um erro" + err);
         });
-    }, [createUser]);
+    }
 
     return (
         <SidebarWithHeader>
@@ -31,30 +31,40 @@ export default function CreateUserComponent() {
                             <Text w="max-content">Voltar</Text>
                         </Flex>
                     </Link>
-                    <Flex flexDirection="column" gap="2">
-                        <Text>Usuario</Text>
-                        <Input w="25rem" h="max" py="2" size={"lg"} type="text" />
-                    </Flex>
-                    <Flex flexDirection="column" gap="2">
-                        <Text>Senha</Text>
-                        <Input w="25rem" h="max" py="2" size={"lg"} type="password" />
-                    </Flex>
-                    <Flex flexDirection="column" gap="2">
-                        <Text>Email</Text>
-                        <Input w="25rem" h="max" py="2" size={"lg"} type="email" />
-                    </Flex>
-                    <Flex flexDirection="column" gap="2">
-                        <Text>Permissão</Text>
-                        <Stack spacing={3}>
-                            <Select variant='outline' placeholder='Escolha uma opção...' />
-                        </Stack>
-                    </Flex>
-                    <Button bg={'#dfbda1'}
-                        color={'white'}
-                        _hover={{
-                            bg: '#dfbda1',
-                            opacity: 0.5
-                        }}>Criar</Button>
+                    <form onSubmit={handleSubmit(onSubmitForm)}>
+                        <Flex flexDirection="column" gap="2" pb="4">
+                            <Text>Usuario</Text>
+                            <Input w="25rem" h="max" py="2" size={"lg"} type="text" {...register("usuario")}  />
+                        </Flex>
+                        <Flex flexDirection="column" gap="2" pb="5">
+                            <Text>Senha</Text>
+                            <Input w="25rem" h="max" py="2" size={"lg"} type="password" {...register("senha")}  />
+                        </Flex>
+                        <Flex flexDirection="column" gap="2" pb="5">
+                            <Text>Email</Text>
+                            <Input w="25rem" h="max" py="2" size={"lg"} type="email" {...register("email")} />
+                        </Flex>
+                        <Flex flexDirection="column" gap="2" pb="5">
+                            <Text>Permissão</Text>
+                            <Stack spacing={3}>
+                                <Select variant='outline' placeholder='Escolha uma opção...' {...register("permissao")}>
+                                    <option value='admin'>Admin</option>
+                                    <option value='gerente'>Gerente</option>
+                                    <option value='usuario'>Usuario</option>
+                                </Select>
+                            </Stack>
+                        </Flex>
+                        <Button 
+                            bg={'#dfbda1'}
+                            type="submit"
+                            color={'white'}
+                            _hover={{
+                                bg: '#dfbda1',
+                                opacity: 0.5
+                            }}>
+                            Criar
+                        </Button>
+                    </form>
                 </Flex>
             </Flex>
         </SidebarWithHeader>

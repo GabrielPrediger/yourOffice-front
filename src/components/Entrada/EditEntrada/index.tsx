@@ -1,6 +1,6 @@
 import { Button, Flex, Image, Input,  Select,  Stack,  Text } from "@chakra-ui/react";
 import { FiArrowLeft } from "react-icons/fi";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { usePicasso } from "../../../hooks/usePicasso";
 import SidebarWithHeader from "../../Sidebar";
 

@@ -1,7 +1,8 @@
-import { Text, Flex, } from '@chakra-ui/react';
+import { Text, Flex } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 import { usePicasso } from '../../../hooks/usePicasso';
 import SidebarWithHeader from '../../Sidebar';
+
 
 const EntradaPage = () => {
 

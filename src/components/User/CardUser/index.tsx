@@ -1,15 +1,15 @@
 import {
-    Flex, Image, useDisclosure,
+    Flex, 
+    useDisclosure,
     Text,
     Button,
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import { usePicasso } from "../../../hooks/usePicasso";
 import { DeleteUserModalComponent } from "../DeleteUserModal";
-import { useEffect, useState } from "react";
-import api from "../../../services/api";
 
 interface IUser {
+    id: number;
     usuario: string;
     senha: string;
     email: string;
@@ -20,11 +20,11 @@ export const CardUser: React.FC<IUser> = props => {
     
     const theme = usePicasso();
     const { isOpen, onOpen, onClose } = useDisclosure()
-    const {usuario, senha, email, permissao} = props
+    const {id, usuario, senha, email, permissao} = props
 
     return (
-        <Flex flexDirection="column" alignItems="center" p="4" w="20rem" h="max" bgColor="white"  border="1.5px solid" borderColor={theme.colors.brown} borderRadius="0.5rem">
-            <DeleteUserModalComponent isOpen={isOpen} onClose={onClose} />
+        <Flex flexDirection="column" alignItems="center" p="4" w="20rem" h="18rem" bgColor="white" border="1.5px solid" borderColor={theme.colors.brown} borderRadius="0.5rem">
+            <DeleteUserModalComponent isOpen={isOpen} onClose={onClose} id={id} />
             <Flex w='100%' left="13rem" bottom="1rem" position="relative">
                 <Flex fontWeight="500" color={theme.colors.brown} px="2" py="1" border="1.5px solid" borderTop="none" borderColor={theme.colors.brown} borderBottomRadius="1rem" bgColor="white">{permissao}</Flex>
             </Flex>
@@ -37,13 +37,13 @@ export const CardUser: React.FC<IUser> = props => {
                     <Text fontWeight={500} fontSize={'sm'} textTransform="uppercase">Senha:</Text>
                     <Text color={'gray.500'} fontSize={'sm'}>*********</Text>
                 </Flex>
-                <Flex gap="2" justifyContent="space-between" flexWrap="wrap">
+                <Flex gap="2" justifyContent="space-between" >
                     <Text fontWeight={500} fontSize={'sm'} textTransform="uppercase">Email:</Text>
-                    <Text color={'gray.500'} fontSize={'sm'}>{email}</Text>
+                    <Text color={'gray.500'} fontSize={'sm'} overflow="hidden">{email}</Text>
                 </Flex>
             </Flex>
             <Flex gap="8" pt="4">
-                    <Link to='/editar-usuario'>
+                    <Link to={`/editar-usuario/${id}`}>
                         <Button py="1" w="max" h="max" color='white' bgColor={theme.colors.brown} border="1px solid" borderColor={theme.colors.brown} borderRadius="2xl">Editar</Button>
                     </Link>
                     <Button onClick={onOpen} py="1" w="max" h="max" color={theme.colors.brown} bgColor="white" border="1px solid" borderColor={theme.colors.brown} borderRadius="2xl">Deletar</Button>
