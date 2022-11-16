@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { FiArrowLeft } from "react-icons/fi";
 import { Link, useParams } from "react-router-dom";
-import { usePicasso } from "../../../hooks/usePicasso";
 import api from "../../../services/api";
 import SidebarWithHeader from "../../Sidebar";
 
@@ -18,11 +17,10 @@ interface IUser {
 const select_options = [{id: 1, value: 'Admin'}, {id: 2, value: 'Gerente'}, {id: 3, value: 'Usuario'}]
 
 export default function EditUserComponent() {
-    const theme = usePicasso();
 
     const [editUser, setEditUser] = useState<IUser>();
     const { id } = useParams();
-    const { register, handleSubmit } = useForm();
+    const { register, handleSubmit } = useForm({defaultValues: editUser});
 
     useEffect(() => {
         api
@@ -35,25 +33,12 @@ export default function EditUserComponent() {
 
 
     const onEditForm = (data: any) => {
-        const body:{[k:string]:string} = {}
-        if(data.usuario){
-            body.usuario = data.usuario
-        }
-        if(data.senha){
-            body.senha = data.senha
-        }
-        if(data.email){
-            body.email = data.email
-        }
-        if(data.permissao){
-            body.permissao = data.permissao
-        }
         api
-        .put(`/update-user/${Number(id)}`, body)
-        .then((response) => console.log(response, 'Foi!'))
-        .catch((err) => {
-        console.error("ops! ocorreu um erro" + err);
-        });
+            .put(`/update-user/${Number(id)}`, data)
+            .then((response) => console.log(response, 'Foi!'))
+            .catch((err) => {
+                console.error("ops! ocorreu um erro" + err);
+            });
     }
 
     return (
@@ -69,7 +54,7 @@ export default function EditUserComponent() {
                     <form onSubmit={handleSubmit(onEditForm)}>
                         <Flex flexDirection="column" gap="2" py="2">
                             <Text>Usuario</Text>
-                            <Input w="25rem" h="max" py="2" size={"lg"}  defaultValue={editUser?.usuario} {...register("usuario")} />
+                            <Input w="25rem" h="max" py="2" size={"lg"} defaultValue={editUser?.usuario} {...register("usuario")} />
                         </Flex>
                         <Flex flexDirection="column" gap="2" py="2">
                             <Text>Senha</Text>

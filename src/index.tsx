@@ -51,7 +51,7 @@ root.render(
         <Route path="/clientes" element={<ClientePage />} />
         <Route path="/listar-cliente" element={<ListCliente />} />
         <Route path="/criar-cliente" element={<CreateClienteComponent />} />
-        <Route path="/editar-cliente" element={<EditarClienteComponent />} />
+        <Route path="/editar-cliente/:id" element={<EditarClienteComponent />} />
 
         <Route path="/saidas" element={<SaidaPage />} />
         <Route path="/criar-saida" element={<CreateSaidaComponent />} />
