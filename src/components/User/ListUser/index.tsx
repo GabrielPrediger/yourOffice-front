@@ -21,7 +21,7 @@ export default function ListUser() {
         });
     }, [user]);
 
-    console.log(user);
+    
     return (
         <SidebarWithHeader>
             <Link to="/usuarios" style={{ width: "max-content" }}>
@@ -30,9 +30,9 @@ export default function ListUser() {
                     <Text w="max-content">Voltar</Text>
                 </Flex>
             </Link>
-            <Flex pt="10" gap="4" flexWrap="wrap" justifyContent="center">
-                {user.map((data: any) => 
-                    <CardUser usuario={data.usuario} senha={data.enha} email={data.email} permissao={data.permissao} />
+            <Flex w="90%" pt="10" gap="4" flexWrap="wrap" justifyContent="center">
+                {user?.map((data: any) => 
+                    <CardUser id={data.id} usuario={data.usuario} senha={data.senha} email={data.email} permissao={data.permissao} />
                 )}
             </Flex>
         </SidebarWithHeader>

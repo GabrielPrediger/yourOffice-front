@@ -46,7 +46,7 @@ root.render(
         <Route path="/usuarios" element={<UserPage />} />
         <Route path="/listar-usuario" element={<ListUser />} />
         <Route path="/criar-usuario" element={<CreateUserComponent />} />
-        <Route path="/editar-usuario" element={<EditUserComponent />} />
+        <Route path="/editar-usuario/:id" element={<EditUserComponent />} />
 
         <Route path="/clientes" element={<ClientePage />} />
         <Route path="/listar-cliente" element={<ListCliente />} />

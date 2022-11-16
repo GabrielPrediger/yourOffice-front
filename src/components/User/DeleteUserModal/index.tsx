@@ -1,12 +1,25 @@
 import { Button, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Text } from "@chakra-ui/react";
+import api from "../../../services/api";
 
 interface IModal {
     isOpen: boolean;
     onClose: () => void;
+    id: number;
 }
 
 export const DeleteUserModalComponent: React.FC<IModal> = props => {
-    const { isOpen, onClose } = props;
+    const { isOpen, onClose, id } = props;
+
+
+    const onEditForm = () => {
+        api
+        .delete(`/delete-user/${Number(id)}`)
+        .then((response) => console.log('User deletado!'),)
+        .catch((err) => {
+        console.error("ops! ocorreu um erro" + err);
+        });
+        onClose()
+    }
 
     return (
 
@@ -22,7 +35,7 @@ export const DeleteUserModalComponent: React.FC<IModal> = props => {
                 </ModalBody>
 
                 <ModalFooter justifyContent="center">
-                    <Button bgColor="#F56565" color="white" _hover={{ opacity: 0.8 }}>Excluir</Button>
+                    <Button onClick={onEditForm} bgColor="#F56565" color="white" _hover={{ opacity: 0.8 }}>Excluir</Button>
                 </ModalFooter>
             </ModalContent>
         </Modal>

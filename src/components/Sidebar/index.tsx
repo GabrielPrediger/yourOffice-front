@@ -17,7 +17,6 @@ import {
   FlexProps,
   Menu,
   MenuButton,
-  MenuDivider,
   MenuItem,
   MenuList,
 } from '@chakra-ui/react';
@@ -96,6 +95,9 @@ interface SidebarProps extends BoxProps {
 }
 
 const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
+
+  const { isOpen, onToggle } = useDisclosure()
+
   return (
     <Box
       transition="3s ease"
@@ -113,10 +115,11 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
         <CloseButton display={{ base: 'flex', md: 'none' }} onClick={onClose} />
       </Flex>
       {LinkItems.map((link) => (
-        <NavItem key={link.name} icon={link.icon} link={link.link}>
+        <NavItem key={link.name} icon={link.icon} link={link.link} onClick={onToggle}>
           {link.name}
         </NavItem>
       ))}
+
     </Box>
   );
 };
