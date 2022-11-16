@@ -10,7 +10,6 @@ interface IModal {
 export const DeleteUserModalComponent: React.FC<IModal> = props => {
     const { isOpen, onClose, id } = props;
 
-
     const onEditForm = () => {
         api
         .delete(`/delete-user/${Number(id)}`)
