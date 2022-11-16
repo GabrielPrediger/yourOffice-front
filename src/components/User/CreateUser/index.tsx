@@ -3,10 +3,23 @@ import { FiArrowLeft } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import { usePicasso } from "../../../hooks/usePicasso";
 import SidebarWithHeader from "../../Sidebar";
+import { useEffect, useState } from "react";
+import api from "../../../services/api";
 
 export default function CreateUserComponent() {
 
     const theme = usePicasso();
+
+    const [createUser, setCreateUser] = useState([]);
+
+    useEffect(() => {
+    api
+        .get("/get-user")
+        .then((response) => setCreateUser(response.data))
+        .catch((err) => {
+        console.error("ops! ocorreu um erro" + err);
+        });
+    }, [createUser]);
 
     return (
         <SidebarWithHeader>
