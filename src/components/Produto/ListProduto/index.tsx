@@ -22,7 +22,9 @@ export default function ListProduto() {
                     <Text w="max-content">Voltar</Text>
                 </Flex>
             </Link>
-            <CardProduto />
+            <Flex pt="10" gap="4" flexWrap="wrap" justifyContent="center">
+                <CardProduto />
+            </Flex>
         </SidebarWithHeader>
     )
 }
