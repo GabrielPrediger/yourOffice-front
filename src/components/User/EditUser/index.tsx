@@ -1,11 +1,24 @@
 import { Button, Flex, Image, Input, Select, Stack, Text } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
 import { FiArrowLeft } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import { usePicasso } from "../../../hooks/usePicasso";
+import api from "../../../services/api";
 import SidebarWithHeader from "../../Sidebar";
 
 export default function EditUserComponent() {
     const theme = usePicasso();
+
+    const [editUser, setEditUser] = useState([]);
+
+    useEffect(() => {
+    api
+        .put("/update-user")
+        .then((response) => setEditUser(response.data))
+        .catch((err) => {
+        console.error("ops! ocorreu um erro" + err);
+        });
+    }, [editUser]);
 
     return (
         <SidebarWithHeader>
