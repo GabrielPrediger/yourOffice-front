@@ -66,7 +66,7 @@ root.render(
         <Route path="/produtos" element={<ProdutoPage />} />
         <Route path="/criar-produto" element={<CreateProdutoComponent />} />
         <Route path="/listar-produtos" element={<ListProduto />} />
-        <Route path="/editar-produto" element={<EditarProdutoComponent />} />
+        <Route path="/editar-produto/:id" element={<EditarProdutoComponent />} />
 
       </Routes>
     </BrowserRouter>
