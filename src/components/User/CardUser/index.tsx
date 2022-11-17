@@ -20,7 +20,7 @@ export const CardUser: React.FC<IUser> = props => {
     
     const theme = usePicasso();
     const { isOpen, onOpen, onClose } = useDisclosure()
-    const {id, usuario, senha, email, permissao} = props
+    const { id, usuario, senha, email, permissao } = props
 
     return (
         <Flex flexDirection="column" alignItems="center" p="4" w="20rem" h="18rem" bgColor="white" border="1.5px solid" borderColor={theme.colors.brown} borderRadius="0.5rem">

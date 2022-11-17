@@ -55,7 +55,7 @@ root.render(
 
         <Route path="/saidas" element={<SaidaPage />} />
         <Route path="/criar-saida" element={<CreateSaidaComponent />} />
-        <Route path="/editar-saida" element={<EditarSaidaComponent />} />
+        <Route path="/editar-saida/:id" element={<EditarSaidaComponent />} />
         <Route path="/listar-saidas" element={<ListSaida />} />
 
         <Route path="/entradas" element={<EntradaPage />} />
