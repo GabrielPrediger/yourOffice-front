@@ -1,15 +1,28 @@
 import { Flex, Image, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tr, useDisclosure } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
 import {  AiOutlineCloseSquare } from "react-icons/ai";
 import { BsPencilSquare } from "react-icons/bs";
 import { FiArrowLeft } from "react-icons/fi";
 import { Link } from "react-router-dom";
+import api from "../../../services/api";
 import SidebarWithHeader from "../../Sidebar";
-import CardSaida from "../CardSaida";
+import { CardSaida } from "../CardSaida";
 import { DeleteSaidaModalComponent } from "../DeleteSaidaModal";
 
 export default function ListSaida() {
 
     const { isOpen, onOpen, onClose } = useDisclosure()
+
+    const [saida, setSaida] = useState([]);
+
+    useEffect(() => {
+        api
+            .get("/get-user-by-data")
+            .then((response: any) => setSaida(response.data))
+            .catch((err: any) => {
+                console.error("ops! ocorreu um erro" + err);
+            });
+    }, [saida]);
 
     return (
         <SidebarWithHeader>
@@ -20,7 +33,10 @@ export default function ListSaida() {
                 </Flex>
             </Link>
             <Flex pt="10" gap="4" flexWrap="wrap" justifyContent="center">
-                <CardSaida />
+                {saida.map((data: any) =>
+                    <CardSaida id={data.id} valor={data.valor} data={data.data} descricao={data.descricao} />
+                )}
+                
             </Flex>
         </SidebarWithHeader>
     )
