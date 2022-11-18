@@ -1,14 +1,37 @@
 import { Button, Flex, Image, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Text } from "@chakra-ui/react";
 import { usePicasso } from "../../../hooks/usePicasso";
-
+import { useState, useEffect } from 'react'
+import api from "../../../services/api";
 interface IModal {
+    produtoId: number;
     isOpen: boolean;
     onClose: () => void;
 }
 
+interface IProduct {
+    id?: number;
+    nome: string;
+    descricao: string;
+    quantidade: number;
+    tipo: string; //alugar ou vender
+    foto: string;
+    preco: number;
+}
+
 export const ProdutosVendaModal: React.FC<IModal> = props => {
-    const { isOpen, onClose } = props;
+
+    const [produto, setProduto] = useState<IProduct>()
+    const { produtoId, isOpen, onClose } = props;
     const theme = usePicasso();
+
+    useEffect(() => {
+        api
+            .get(`/produto/${produtoId}`)
+            .then((response: any) => setProduto(response.data))
+            .catch((err: any) => {
+                console.error("ops! ocorreu um erro" + err);
+            });
+    }, [produto, produtoId]);
 
     return (
 
@@ -18,18 +41,17 @@ export const ProdutosVendaModal: React.FC<IModal> = props => {
                 <ModalHeader fontWeight="500">Produtos</ModalHeader>
                 <ModalCloseButton />
                 <ModalBody mb="2">
-                    <Flex gap="2" alignItems="center">
-                        <Image objectFit={'cover'} w="3rem" h="3rem" rounded={'lg'} src="https://abracasa.vteximg.com.br/arquivos/ids/180932-400-400/mesa-frente.jpg?v=637891859730970000" />
-                        {/* Leva para o produto */}
-                        <Flex justifyContent="space-between" w='100%'>
-                            <Text  _hover={{ cursor: 'pointer', color: theme.colors.brown }} transition="0.5s">
-                                Mesa de centro 
-                            </Text>
-                            <Text  _hover={{ cursor: 'pointer', color: theme.colors.brown }} transition="0.5s">
-                                R$ 67,90
-                            </Text>
+                        <Flex gap="2" alignItems="center">
+                            <Image objectFit={'cover'} w="3rem" h="3rem" rounded={'lg'} src={`${produto?.foto}`} />
+                            <Flex justifyContent="space-between" w='100%'>
+                                <Text  _hover={{ cursor: 'pointer', color: theme.colors.brown }} transition="0.5s">
+                                    {produto?.nome}
+                                </Text>
+                                <Text  _hover={{ cursor: 'pointer', color: theme.colors.brown }} transition="0.5s">
+                                    R$ {produto?.preco}
+                                </Text>
+                            </Flex>
                         </Flex>
-                    </Flex>
                 </ModalBody>
             </ModalContent>
         </Modal>
