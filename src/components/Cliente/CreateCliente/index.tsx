@@ -5,22 +5,44 @@ import { Link } from "react-router-dom";
 import { usePicasso } from "../../../hooks/usePicasso";
 import api from "../../../services/api";
 import SidebarWithHeader from "../../Sidebar";
+import { useToasty } from "../../Toast";
+import { useCallback } from 'react'
 
 export default function CreateClienteComponent() {
 
     const theme = usePicasso();
-
+    const { toast } = useToasty();
     const { register, handleSubmit } = useForm();
 
     const onSubmitForm = (data: any) => {
         console.log(data,'data')
         api
         .post("/create-cliente", { nome: data.nome, data_nascimento: data.data_nascimento, cpf_cnpj: data.cpf_cnpj, rg: data.rg, endereco: data.endereco})
-        .then((response: any) => console.log(response))
-        .catch((err: any) => {
-        console.error("ops! ocorreu um erro" + err);
+        .then((response: any) => {console.log(response); setToast(response.status);})
+        .catch((err: Error) => {
+            console.log("ops! ocorreu um erro" + setToast(err));
         });
     }
+
+    const setToast = useCallback((status: any) => {
+        if(status === 201){
+            toast({
+                id: "toastCreateSuccess",
+                position: "top-right",
+                status: "success",
+                title: "Cliente criado!",
+                description: "Vá para a lista de clientes para visualizar!",
+            });
+        } else if(status.response.status === 400 || 500){
+            toast({
+                id: "toastCreateError",
+                position: "top-right",
+                status: "error",
+                title: status.response.status === 500 ? "Insira dados nos campos" : "Dados ja existentes!",
+                description: status.response.status === 500 ? "Insira dados nos campos" : status.response.data.message,
+            });
+        }     
+    }, [toast])
 
     return (
         <SidebarWithHeader>

@@ -22,9 +22,10 @@ export const CardUser: React.FC<IUser> = props => {
     const { isOpen, onOpen, onClose } = useDisclosure()
     const { id, usuario, senha, email, permissao } = props
 
+
     return (
         <Flex flexDirection="column" alignItems="center" p="4" w="20rem" h="18rem" bgColor="white" border="1.5px solid" borderColor={theme.colors.brown} borderRadius="0.5rem">
-            <DeleteUserModalComponent isOpen={isOpen} onClose={onClose} id={id} />
+            <DeleteUserModalComponent id={id} isOpen={isOpen} onClose={onClose} />
             <Flex w='100%' left="13rem" bottom="1rem" position="relative">
                 <Flex fontWeight="500" color={theme.colors.brown} px="2" py="1" border="1.5px solid" borderTop="none" borderColor={theme.colors.brown} borderBottomRadius="1rem" bgColor="white">{permissao}</Flex>
             </Flex>
