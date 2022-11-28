@@ -20,16 +20,16 @@ export default function EditUserComponent() {
 
     const [editUser, setEditUser] = useState<IUser>();
     const { id } = useParams();
-    const { register, handleSubmit } = useForm({defaultValues: editUser});
+    const { register, handleSubmit, reset } = useForm({defaultValues: editUser});
 
     useEffect(() => {
         api
             .get(`/get-user-id/${Number(id)}`)
-            .then((response) => setEditUser(response.data))
+            .then((response) => {setEditUser(response.data); reset(response.data);})
             .catch((err) => {
             console.error("ops! ocorreu um erro" + err);
             });
-    }, [id]);
+    }, [id, reset]);
 
 
     const onEditForm = (data: any) => {
