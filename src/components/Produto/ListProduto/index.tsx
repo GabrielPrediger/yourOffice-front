@@ -24,7 +24,7 @@ export default function ListProduto() {
             .catch((err: any) => {
             console.error("ops! ocorreu um erro" + err);
             });
-        }, []);
+        }, [produto]);
 
     return (
         <SidebarWithHeader>
