@@ -15,6 +15,7 @@ export default function CreateUserComponent() {
     const { register, handleSubmit } = useForm();
 
     const onSubmitForm = (data: any) => {
+        console.log(data, 'user')
         api
             .post("/create-user", { usuario: data.usuario, senha: data.senha, email: data.email, permissao: data.permissao })
             .then((response: any) => {console.log(response); setToast(response.status);})
