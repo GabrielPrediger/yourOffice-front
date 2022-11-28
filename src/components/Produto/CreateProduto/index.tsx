@@ -19,14 +19,25 @@ export default function CreateProdutoComponent() {
 
     const { register, handleSubmit } = useForm();
 
-    const onSubmitForm = (data: IProduct | any) => {
-        console.log(data, 'data');
+    function convertImageToBase64(file: File) {
+        return new Promise((resolve, reject) => {
+            const fileReader = new FileReader();
+            fileReader.readAsDataURL(file)
+
+            fileReader.onload = () => resolve(fileReader.result)
+            fileReader.onerror = (err) => reject(err)
+        })
+    }
+
+    const onSubmitForm = async (data: IProduct | any) => {
+        console.log(data.foto[0].size > 50000000)
+        const request = { nome: data.nome, descricao: data.descricao, quantidade: data.quantidade, tipo: data.tipo, foto: await convertImageToBase64(data.foto[0]), preco: data.preco}
         api
-        .post("/create-produto", { nome: data.nome, descricao: data.descricao, quantidade: data.quantidade, tipo: data.tipo, foto: data.foto, preco: data.preco})
-        .then((response: any) => console.log(response, 'foi'))
-        .catch((err: any) => {
-        console.error("ops! ocorreu um erro" + err);
-        });
+            .post("/create-produto", request)
+            .then((response: any) => console.log(response, 'foi'))
+            .catch((err: any) => {
+                console.error("ops! ocorreu um erro" + err);
+            });
     }
 
     return (
@@ -40,19 +51,19 @@ export default function CreateProdutoComponent() {
                         </Flex>
                     </Link>
                     <form onSubmit={handleSubmit(onSubmitForm)}>
-                        <Flex flexDirection="column" gap="2">
+                        <Flex flexDirection="column" gap="2" pb="5">
                             <Text>Nome</Text>
                             <Input w="25rem" h="max" py="2" size={"lg"} type="text" {...register("nome")} />
                         </Flex>
-                        <Flex flexDirection="column" gap="2">
+                        <Flex flexDirection="column" gap="2" pb="5">
                             <Text>Descrição</Text>
                             <Input w="25rem" h="max" py="2" size={"lg"} type="text" {...register("descricao")} />
                         </Flex>
-                        <Flex flexDirection="column" gap="2">
+                        <Flex flexDirection="column" gap="2" pb="5">
                             <Text>Quantidade</Text>
                             <Input w="25rem" h="max" py="2" size={"lg"} type="number" {...register("quantidade")} />
                         </Flex>
-                        <Flex flexDirection="column" gap="2">
+                        <Flex flexDirection="column" gap="2" pb="5">
                             <Text>Tipo</Text>
                             <Stack spacing={3}>
                                 <Select variant='outline' placeholder='Escolha uma opção...' {...register("tipo")}>
@@ -61,11 +72,11 @@ export default function CreateProdutoComponent() {
                                 </Select>
                             </Stack>
                         </Flex>
-                        <Flex flexDirection="column" gap="2">
+                        <Flex flexDirection="column" gap="2" pb="5">
                             <Text>Foto</Text>
-                            <Input w="25rem" h="max" py="2" size={"lg"} type="text" {...register("foto")} />
+                            <Input w="25rem" h="max" py="2" size={"lg"} type="file" {...register("foto")} />
                         </Flex>
-                        <Flex flexDirection="column" gap="2">
+                        <Flex flexDirection="column" gap="2" pb="5">
                             <Text>Preço</Text>
                             <Input w="25rem" h="max" py="2" size={"lg"} type="number" {...register("preco")} />
                         </Flex>

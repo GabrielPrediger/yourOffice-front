@@ -28,6 +28,16 @@ export default function EditarProdutoComponent() {
     const { id } = useParams();
     const { register, handleSubmit, reset } = useForm({defaultValues: editProduto });
 
+    function convertImageToBase64(file: File) {
+        return new Promise((resolve, reject) => {
+            const fileReader = new FileReader();
+            fileReader.readAsDataURL(file)
+
+            fileReader.onload = () => resolve(fileReader.result)
+            fileReader.onerror = (err) => reject(err)
+        })
+    }
+
     useEffect(() => {
         api
             .get(`/produto/${Number(id)}`)
@@ -37,10 +47,10 @@ export default function EditarProdutoComponent() {
             });
     }, [id, reset]);
 
-    const onEditForm = (data: any) => {
-        console.log(data.foto.FileList.File.name, 'data');
+    const onEditForm = async (data: any) => {
+        const request = { nome: data.nome, descricao: data.descricao, quantidade: data.quantidade, tipo: data.tipo, foto: await convertImageToBase64(data.foto[0]), preco: data.preco}
         api
-            .put(`/update-produto/${Number(id)}`, data)
+            .put(`/update-produto/${Number(id)}`, request)
             .then((response) => console.log(response, 'Foi!'))
             .catch((err) => {
                 console.error("ops! ocorreu um erro" + err);
@@ -58,19 +68,19 @@ export default function EditarProdutoComponent() {
                         </Flex>
                     </Link>
                     <form onSubmit={handleSubmit(onEditForm)}>
-                        <Flex flexDirection="column" gap="2">
+                        <Flex flexDirection="column" gap="2" pb="5">
                             <Text>Nome</Text>
                             <Input w="25rem" h="max" py="2" size={"lg"} type="text" defaultValue={editProduto?.nome} {...register("nome")} />
                         </Flex>
-                        <Flex flexDirection="column" gap="2">
+                        <Flex flexDirection="column" gap="2" pb="5">
                             <Text>Descrição</Text>
                             <Input w="25rem" h="max" py="2" size={"lg"} type="text" defaultValue={editProduto?.descricao} {...register("descricao")} />
                         </Flex>
-                        <Flex flexDirection="column" gap="2">
+                        <Flex flexDirection="column" gap="2" pb="5">
                             <Text>Quantidade</Text>
                             <Input w="25rem" h="max" py="2" size={"lg"} type="number" defaultValue={editProduto?.quantidade} {...register("quantidade")}  />
                         </Flex>
-                        <Flex flexDirection="column" gap="2">
+                        <Flex flexDirection="column" gap="2" pb="5">
                             <Text>Tipo</Text>
                             <Stack spacing={3}>
                                 <Select variant='outline' placeholder='Escolha uma opção...' defaultValue={editProduto?.tipo} {...register("tipo")}>
@@ -80,11 +90,11 @@ export default function EditarProdutoComponent() {
                                 </Select>
                             </Stack>
                         </Flex>
-                        <Flex flexDirection="column" gap="2">
+                        <Flex flexDirection="column" gap="2" pb="5">
                             <Text>Foto</Text>
                             <Input w="25rem" h="max" py="2" size={"lg"} type="file" defaultValue={editProduto?.foto} {...register("foto")} />
                         </Flex>
-                        <Flex flexDirection="column" gap="2">
+                        <Flex flexDirection="column" gap="2" pb="5">
                             <Text>Preço</Text>
                             <Input w="25rem" h="max" py="2" size={"lg"}  defaultValue={editProduto?.preco} {...register("preco")} />
                         </Flex>
