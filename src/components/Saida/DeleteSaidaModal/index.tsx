@@ -1,6 +1,6 @@
 import { Button, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Text } from "@chakra-ui/react";
 import api from "../../../services/api";
-import { useToasty } from "../../Toast";
+import { useToasty } from "../../Tooltip";
 
 interface IModal {
     id: number;

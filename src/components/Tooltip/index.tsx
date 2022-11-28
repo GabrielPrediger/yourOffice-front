@@ -86,9 +86,9 @@ const useToasty = () => {
 			render: ({ onClose }) => (
 				<Flex
 					h="fit-content"
-					w="356px"
-					mt="50px"
-					mr="40px"
+					w="22.25rem"
+					mt="3.125rem"
+					mr="2.5rem"
 					p={3}
 					bg={'#fff3dd'}
 					borderRadius="0.2rem"

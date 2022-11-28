@@ -6,7 +6,7 @@ import { usePicasso } from "../../../hooks/usePicasso";
 import SidebarWithHeader from "../../Sidebar";
 import { useForm } from "react-hook-form";
 import api from "../../../services/api";
-import { useToasty } from "../../Toast";
+import { useToasty } from "../../Tooltip";
 
 interface IUser {
     id: number;

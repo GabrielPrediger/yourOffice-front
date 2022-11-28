@@ -1,5 +1,6 @@
 import { Button, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Text } from "@chakra-ui/react";
 import api from "../../../services/api";
+import { useToasty } from "../../Tooltip";
 
 interface IModal {
     id: number;
@@ -9,6 +10,7 @@ interface IModal {
 
 export const DeleteProdutoModalComponent: React.FC<IModal> = props => {
     const { id, isOpen, onClose } = props;
+    const { toast } = useToasty();
 
     const onDelete = () => {
         api
@@ -17,7 +19,18 @@ export const DeleteProdutoModalComponent: React.FC<IModal> = props => {
         .catch((err) => {
         console.error("ops! ocorreu um erro" + err);
         });
+        setToast()
         onClose()
+    }
+
+    const setToast = () => {
+        toast({
+            id: "toastDeleteProduto",
+            position: "top-right",
+            status: "success",
+            title: "Dados deletados!",
+            description: "Produto deletado com sucesso!",
+        });
     }
 
     return (

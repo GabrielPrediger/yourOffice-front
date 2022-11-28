@@ -6,7 +6,7 @@ import SidebarWithHeader from "../../Sidebar";
 import { useEffect, useState } from "react";
 import api from "../../../services/api";
 import { useForm } from "react-hook-form";
-import { useToasty } from "../../Toast";
+import { useToasty } from "../../Tooltip";
 
 export default function CreateUserComponent() {
 

@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { usePicasso } from "../../../hooks/usePicasso";
 import api from "../../../services/api";
 import SidebarWithHeader from "../../Sidebar";
-import { useToasty } from "../../Toast";
+import { useToasty } from "../../Tooltip";
 import { useCallback } from 'react'
 
 export default function CreateClienteComponent() {

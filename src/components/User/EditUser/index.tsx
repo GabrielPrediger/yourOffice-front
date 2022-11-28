@@ -5,7 +5,7 @@ import { FiArrowLeft } from "react-icons/fi";
 import { Link, useParams } from "react-router-dom";
 import api from "../../../services/api";
 import SidebarWithHeader from "../../Sidebar";
-import { useToasty } from "../../Toast";
+import { useToasty } from "../../Tooltip";
 
 interface IUser {
     id: number;
