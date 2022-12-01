@@ -1,5 +1,5 @@
 import { useEffect, useState, useMemo} from "react";
-import { Flex, Image, Text} from "@chakra-ui/react";
+import { Button, Checkbox, Flex, Image, Menu, MenuButton, MenuItem, MenuList, Stack, Text} from "@chakra-ui/react";
 import { FiArrowLeft } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import SidebarWithHeader from "../../Sidebar";
@@ -8,6 +8,7 @@ import api from "../../../services/api";
 import { useAuth } from "../../../hooks/useAuth";
 import { formatDate } from "../../../utils/formatDate";
 import { Pagination } from "../../Pagination";
+import { IoIosArrowDown } from "react-icons/io";
 // import { usePaginator } from 'chakra-paginator';
 // import { handlePaginate } from "../../../utils/handlePaginate";
 
@@ -33,7 +34,7 @@ export default function ListCliente() {
     useEffect(() => {
     api
         .get("/clientes", {headers: {
-            Authorization: `Bearer ${token}`
+            authorization: `Bearer ${token}`
          }})
         .then((response: any) => setCliente(response.data))
         .catch((err: any) => {
@@ -49,9 +50,26 @@ export default function ListCliente() {
                     <Text w="max-content">Voltar</Text>
                 </Flex>
             </Link>
+            <Flex justifyContent="space-between" px="7rem" pt="10">
+                <Flex>
+                    <Menu>
+                        <MenuButton 
+                            as={Button} 
+                            rightIcon={<IoIosArrowDown />}
+                            _hover={{ background: '#e2cab7'}}
+                            _active={{ background: '#e2cab7'}}
+                        >
+                            Filtro
+                        </MenuButton>
+                        <MenuList>
+                            <MenuItem _hover={{ background: '#e2cab7'}}>Nome Crescente</MenuItem>
+                        </MenuList>
+                    </Menu>
+                </Flex>
+            </Flex>
                 <Flex pt="10" gap="4" flexWrap="wrap" justifyContent="center">
                     {cliente.map((data: any) => 
-                        <CardCliente id={data.id} nome={data.nome} data={formatDate(data.data_nascimento)} cpf_cnpj={data.cpf_cnpj} rg={data.rg} endereco={data.endereco} />
+                        <CardCliente key={data.id} id={data.id} nome={data.nome} data={formatDate(data.data_nascimento)} cpf_cnpj={data.cpf_cnpj} rg={data.rg} endereco={data.endereco} />
                     )}
                 </Flex>
         </SidebarWithHeader>
