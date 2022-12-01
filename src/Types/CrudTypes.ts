@@ -11,6 +11,13 @@ export interface ICreateSaidas {
     descricao: string;
 }
 
+export interface ISaidas {
+    id: number;
+    valor: number;
+    data: number;
+    descricao: string;
+}
+
 export interface ICreateProduct {
     id?: number;
     nome: string;

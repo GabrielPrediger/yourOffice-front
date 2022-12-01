@@ -9,12 +9,31 @@ import {
   Text,
   useColorModeValue,
 } from '@chakra-ui/react';
+import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../../hooks/useAuth';
 import { usePicasso } from '../../../hooks/usePicasso'
+import { useUserLogged } from '../../../hooks/useUserLogged';
+import api from '../../../services/api';
 
 
 const LoginComponent = () => {
 
   const theme = usePicasso();
+  const { register, handleSubmit } = useForm();
+  const { setToken, setRefreshToken } = useAuth()
+  const { setLogged } = useUserLogged()
+  const navigate = useNavigate()
+
+  const onSubmitForm = (data: any) => {
+    setLogged(data.usuario)
+    api
+        .post("/login", { usuario: data.usuario, senha: data.senha })
+        .then((response: any) => {setToken(response.data.token); setRefreshToken(response.data.refreshToken); navigate('/inicio');})
+        .catch((err: any) => {
+            console.error("ops! ocorreu um erro" + setLogged(''));
+        });
+  }
 
   return (
     <Flex
@@ -35,27 +54,30 @@ const LoginComponent = () => {
               yourOffice
             </Text>
           </Flex>
-          <Stack spacing={4}>
-            <FormControl id="email">
-              <FormLabel>Usuario</FormLabel>
-              <Input w="20rem" h="max" py="2" size={"lg"} type="email" />
-            </FormControl>
-            <FormControl id="password">
-              <FormLabel>Senha</FormLabel>
-              <Input w="20rem" h="max" py="2" size={"lg"} type="password" />
-            </FormControl>
-            <Stack spacing={10} pt={'2'}>
-              <Button
-                bg={'#dfbda1'}
-                color={'white'}
-                _hover={{
-                  bg: '#e2d1c3',
-                  opacity: 0.5
-                }}>
-                Sign in
-              </Button>
+          <form onSubmit={handleSubmit(onSubmitForm)}>
+            <Stack spacing={4}>
+              <FormControl id="email">
+                <FormLabel>Usuario</FormLabel>
+                <Input w="20rem" h="max" py="2" size={"lg"} type="text" {...register("usuario")} />
+              </FormControl>
+              <FormControl id="password">
+                <FormLabel>Senha</FormLabel>
+                <Input w="20rem" h="max" py="2" size={"lg"} type="password" {...register("senha")} />
+              </FormControl>
+              <Stack spacing={10} pt={'2'}>
+                <Button
+                  bg={'#dfbda1'}
+                  color={'white'}
+                  type="submit"
+                  _hover={{
+                    bg: '#e2d1c3',
+                    opacity: 0.5
+                  }}>
+                  Sign in
+                </Button>
+              </Stack>
             </Stack>
-          </Stack>
+          </form>
         </Box>
       </Stack>
     </Flex>

@@ -5,21 +5,25 @@ import SidebarWithHeader from "../../Sidebar";
 import { useEffect, useState } from "react";
 import api from "../../../services/api";
 import { CardUser } from "../CardUser";
+import { useAuth } from "../../../hooks/useAuth";
 
 export default function ListUser() {
 
     const { isOpen, onOpen, onClose } = useDisclosure()
 
     const [user, setUser] = useState([]);
+    const { token } = useAuth()
 
     useEffect(() => {
     api
-        .get("/get-user")
+        .get("/get-user", {headers: {
+            Authorization: `Bearer ${token}`
+         }})
         .then((response: any) => setUser(response.data))
         .catch((err: any) => {
         console.error("ops! ocorreu um erro" + err);
         });
-    }, [user]);
+    }, [token, user]);
 
     
     return (

@@ -6,6 +6,7 @@ import { usePicasso } from "../../../hooks/usePicasso";
 import SidebarWithHeader from "../../Sidebar";
 import { useForm } from "react-hook-form";
 import api from "../../../services/api";
+import { useAuth } from "../../../hooks/useAuth";
 
 interface IProduct {
     id?: number;
@@ -27,6 +28,7 @@ export default function EditarProdutoComponent() {
     const [editProduto, setEditProduto] = useState<IProduct>();
     const { id } = useParams();
     const { register, handleSubmit, reset } = useForm({defaultValues: editProduto });
+    const { token } = useAuth()
 
     function convertImageToBase64(file: File) {
         return new Promise((resolve, reject) => {
@@ -40,17 +42,21 @@ export default function EditarProdutoComponent() {
 
     useEffect(() => {
         api
-            .get(`/produto/${Number(id)}`)
+            .get(`/produto/${Number(id)}`, {headers: {
+                Authorization: `Bearer ${token}`
+             }})
             .then((response) => {setEditProduto(response.data); reset(response.data);})
             .catch((err) => {
             console.error("ops! ocorreu um erro" + err);
             });
-    }, [id, reset]);
+    }, [id, reset, token]);
 
     const onEditForm = async (data: any) => {
         const request = { nome: data.nome, descricao: data.descricao, quantidade: data.quantidade, tipo: data.tipo, foto: await convertImageToBase64(data.foto[0]), preco: data.preco}
         api
-            .put(`/update-produto/${Number(id)}`, request)
+            .put(`/update-produto/${Number(id)}`, request, {headers: {
+                Authorization: `Bearer ${token}`
+             }})
             .then((response) => console.log(response, 'Foi!'))
             .catch((err) => {
                 console.error("ops! ocorreu um erro" + err);

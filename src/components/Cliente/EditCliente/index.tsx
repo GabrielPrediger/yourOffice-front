@@ -6,6 +6,7 @@ import { usePicasso } from "../../../hooks/usePicasso";
 import SidebarWithHeader from "../../Sidebar";
 import { useForm } from "react-hook-form";
 import api from "../../../services/api";
+import { useAuth } from "../../../hooks/useAuth";
 
 interface IUser {
     id: number;
@@ -23,19 +24,24 @@ export default function EditarClienteComponent() {
     const [editCliente, setEditCliente] = useState<IUser>();
     const { id } = useParams();
     const { register, handleSubmit, reset } = useForm({defaultValues: editCliente });
+    const { token } = useAuth()
 
     useEffect(() => {
         api
-            .get(`/cliente/${Number(id)}`)
+            .get(`/cliente/${Number(id)}`, {headers: {
+                Authorization: `Bearer ${token}`
+             }})
             .then((response) => {setEditCliente(response.data); reset(response.data);})
             .catch((err) => {
             console.error("ops! ocorreu um erro" + err);
             });
-    }, [id, reset]);
+    }, [id, reset, token]);
 
     const onEditForm = (data: any) => {
         api
-            .put(`/update-cliente/${Number(id)}`, data)
+            .put(`/update-cliente/${Number(id)}`, data, {headers: {
+                Authorization: `Bearer ${token}`
+             }})
             .then((response) => console.log(response, 'Foi!'))
             .catch((err) => {
                 console.error("ops! ocorreu um erro" + err);

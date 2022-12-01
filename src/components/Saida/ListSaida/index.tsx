@@ -1,28 +1,34 @@
-import { Flex, Image, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tr, useDisclosure } from "@chakra-ui/react";
+import { Flex, Image, Text, useDisclosure } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import {  AiOutlineCloseSquare } from "react-icons/ai";
-import { BsPencilSquare } from "react-icons/bs";
+import moment from 'moment';
 import { FiArrowLeft } from "react-icons/fi";
 import { Link } from "react-router-dom";
+import { useAuth } from "../../../hooks/useAuth";
 import api from "../../../services/api";
 import SidebarWithHeader from "../../Sidebar";
 import { CardSaida } from "../CardSaida";
-import { DeleteSaidaModalComponent } from "../DeleteSaidaModal";
+import { ISaidas } from "../../../Types/CrudTypes";
+import { formatDate } from "../../../utils/formatDate";
 
 export default function ListSaida() {
 
     const { isOpen, onOpen, onClose } = useDisclosure()
+    const { token } = useAuth()
 
-    const [saida, setSaida] = useState([]);
+    const [saida, setSaida] = useState<ISaidas[]>([]);
 
     useEffect(() => {
         api
-            .get("/get-user-by-data")
-            .then((response: any) => setSaida(response.data))
+            .get("/get-user-by-data", {headers: {
+                Authorization: `Bearer ${token}`
+             }})
+            .then((response: any) => {setSaida(response.data)})
             .catch((err: any) => {
                 console.error("ops! ocorreu um erro" + err);
             });
-    }, [saida]);
+    }, [token]);
+
+    console.log(saida, 'saida')   //retorna o array certinho
 
     return (
         <SidebarWithHeader>
@@ -33,8 +39,8 @@ export default function ListSaida() {
                 </Flex>
             </Link>
             <Flex pt="10" gap="4" flexWrap="wrap" justifyContent="center">
-                {saida.map((data: any) =>
-                    <CardSaida id={data.id} valor={data.valor} data={data.data} descricao={data.descricao} />
+                {saida.map((data) =>
+                    <CardSaida id={data.id} valor={data.valor} data={formatDate(data.data)} descricao={data.descricao} />
                 )}
                 
             </Flex>

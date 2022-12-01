@@ -2,6 +2,7 @@ import { Button, Flex, Image, Input, Select, Stack, Text } from "@chakra-ui/reac
 import { useForm } from "react-hook-form";
 import { FiArrowLeft } from "react-icons/fi";
 import { Link } from "react-router-dom";
+import { useAuth } from "../../../hooks/useAuth";
 import { usePicasso } from "../../../hooks/usePicasso";
 import api from "../../../services/api";
 import SidebarWithHeader from "../../Sidebar";
@@ -9,12 +10,15 @@ import SidebarWithHeader from "../../Sidebar";
 export default function CreateSaidaComponent() {
 
     const theme = usePicasso();
+    const { token } = useAuth()
 
     const { register, handleSubmit } = useForm();
 
     const onSubmitForm = (data: any) => {
         api
-            .post("/create-saida", { valor: data.valor, data: data.data, descricao: data.descricao })
+            .post("/create-saida", { valor: data.valor, data: data.data, descricao: data.descricao }, {headers: {
+                Authorization: `Bearer ${token}`
+             }})
             .then((response: any) => console.log(response))
             .catch((err: any) => {
                 console.error("ops! ocorreu um erro" + err);
@@ -34,15 +38,15 @@ export default function CreateSaidaComponent() {
                     <form onSubmit={handleSubmit(onSubmitForm)}>
                         <Flex flexDirection="column" gap="2">
                             <Text>Valor</Text>
-                            <Input w="25rem" h="max" py="2" size={"lg"} type="number" {...register("valor")} />
+                            <Input placeholder="Digite aqui um valor..." _placeholder={{ color: "#A0AEC0"}} w="25rem" h="max" py="2" size={"lg"} {...register("valor", { required: true} )} />
                         </Flex>
                         <Flex flexDirection="column" gap="2">
                             <Text>Descrição</Text>
-                            <Input w="25rem" h="max" py="2" size={"lg"} type="text" {...register("descricao")} />
+                            <Input placeholder="Digite aqui uma descrição..." _placeholder={{ color: "#A0AEC0"}} w="25rem" h="max" py="2" size={"lg"} type="text" {...register("descricao", { required: true })} />
                         </Flex>
                         <Flex flexDirection="column" gap="2">
                             <Text>Data</Text>
-                            <Input w="25rem" h="max" py="2" size={"lg"} type="date" {...register("data")} />
+                            <Input w="25rem" h="max" py="2" size={"lg"} type="date" {...register("data" , { required: true })} />
                         </Flex>
                         <Button 
                             type="submit"

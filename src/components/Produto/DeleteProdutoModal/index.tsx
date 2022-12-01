@@ -1,4 +1,5 @@
 import { Button, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Text } from "@chakra-ui/react";
+import { useAuth } from "../../../hooks/useAuth";
 import api from "../../../services/api";
 
 interface IModal {
@@ -9,10 +10,13 @@ interface IModal {
 
 export const DeleteProdutoModalComponent: React.FC<IModal> = props => {
     const { id, isOpen, onClose } = props;
+    const { token } = useAuth()
 
     const onDelete = () => {
         api
-        .delete(`/delete-produto/${Number(id)}`)
+        .delete(`/delete-produto/${Number(id)}`, {headers: {
+            Authorization: `Bearer ${token}`
+         }})
         .then((response) => console.log('Produto deletado!'),)
         .catch((err) => {
         console.error("ops! ocorreu um erro" + err);

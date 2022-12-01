@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { FiArrowLeft } from "react-icons/fi";
 import { Link, useParams } from "react-router-dom";
+import { useAuth } from "../../../hooks/useAuth";
 import { usePicasso } from "../../../hooks/usePicasso";
 import api from "../../../services/api";
 import SidebarWithHeader from "../../Sidebar";
@@ -20,21 +21,26 @@ export default function EditarSaidaComponent() {
     const [editSaida, setEditSaida] = useState<ISaidas>();
     const { id } = useParams();
     const { register, handleSubmit, reset } = useForm({defaultValues: editSaida});
+    const { token } = useAuth()
 
     useEffect(() => {
         api
-            .get(`/get-saida-id/${Number(id)}`)
+            .get(`/get-saida-id/${Number(id)}`, {headers: {
+                Authorization: `Bearer ${token}`
+             }})
             .then((response) => {setEditSaida(response.data); reset(response.data);})
             .catch((err) => {
             console.error("ops! ocorreu um erro" + err);
             });
-    }, [id, reset]);
+    }, [id, reset, token]);
 
 
     const onEditForm = (data: any) => {
         console.log(data, 'data')
         api
-            .put(`/update-saida/${Number(id)}`, data)
+            .put(`/update-saida/${Number(id)}`, data, {headers: {
+                Authorization: `Bearer ${token}`
+             }})
             .then((response) => console.log(response, 'Foi!'))
             .catch((err) => {
                 console.error("ops! ocorreu um erro" + err);

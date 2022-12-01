@@ -11,20 +11,24 @@ import { usePicasso } from "../../../hooks/usePicasso";
 import { CardProduto } from "../CardProduto";
 import { useEffect, useState } from "react";
 import api from "../../../services/api";
+import { useAuth } from "../../../hooks/useAuth";
 
 export default function ListProduto() {
 
     const [produto, setProduto] = useState([]);
     const theme = usePicasso();
+    const { token } = useAuth()
 
     useEffect(() => {
         api
-            .get("/produtos")
+            .get("/produtos", {headers: {
+                Authorization: `Bearer ${token}`
+             }})
             .then((response: any) => setProduto(response.data))
             .catch((err: any) => {
             console.error("ops! ocorreu um erro" + err);
             });
-        }, [produto]);
+        }, [produto, token]);
 
     return (
         <SidebarWithHeader>

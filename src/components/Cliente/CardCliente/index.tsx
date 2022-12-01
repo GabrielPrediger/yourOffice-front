@@ -31,7 +31,7 @@ export const CardCliente: React.FC<IUser> = props => {
                     <Text color={'gray.500'} fontSize={'sm'}>{nome}</Text>
                 </Flex>
                 <Flex gap="2" justifyContent="space-between">
-                    <Text fontWeight={500} fontSize={'sm'} textTransform="uppercase">Data:</Text>
+                    <Text fontWeight={500} fontSize={'sm'} textTransform="uppercase">Data nascimento:</Text>
                     <Text color={'gray.500'} fontSize={'sm'}>{data}</Text>
                 </Flex>
                 <Flex gap="2" justifyContent="space-between" flexWrap="wrap">

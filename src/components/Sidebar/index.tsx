@@ -41,6 +41,8 @@ import {
 import { IconType } from 'react-icons';
 import { ReactText } from 'react';
 import { Link } from 'react-router-dom';
+import { useUserLogged } from '../../hooks/useUserLogged';
+import { useAuth } from '../../hooks/useAuth';
 
 interface LinkItemProps {
   name: string;
@@ -165,6 +167,11 @@ interface MobileProps extends FlexProps {
 }
 
 const Sidebar = ({ onOpen, ...rest }: MobileProps) => {
+
+  const { logged, handleDisconnect } = useUserLogged()
+  const str = logged
+  const nome = str?.charAt(0).toUpperCase() + str?.slice(1);
+
   return (
     <Flex
       ml={{ base: 0, md: 60 }}
@@ -217,10 +224,7 @@ const Sidebar = ({ onOpen, ...rest }: MobileProps) => {
                   alignItems="flex-start"
                   spacing="1px"
                   ml="2">
-                  <Text fontSize="sm">Prediger</Text>
-                  <Text fontSize="xs" color="gray.600">
-                    Admin
-                  </Text>
+                  <Text fontSize="sm">{nome}</Text>
                 </VStack>
                 <Box display={{ base: 'none', md: 'flex' }}>
                   <FiChevronDown />
@@ -230,8 +234,10 @@ const Sidebar = ({ onOpen, ...rest }: MobileProps) => {
             <MenuList
               bg={useColorModeValue('white', 'gray.900')}
               borderColor={useColorModeValue('gray.200', 'gray.700')}
-            >
-              <MenuItem>Sign out</MenuItem>
+            > 
+              <Link to='/' onClick={() => handleDisconnect()}>
+                <MenuItem>Sign out</MenuItem>
+              </Link>
             </MenuList>
           </Menu>
         </Flex>
