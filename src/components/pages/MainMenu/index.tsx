@@ -1,6 +1,6 @@
 import { usePicasso } from '../../../hooks/usePicasso'
 import '../../../styles/scrollbar.css'
-import { Example } from '../../Charts';
+import  Example  from '../../Charts';
 import SidebarWithHeader from '../../Sidebar';
 import CreateUserComponent from '../../User/CreateUser';
 

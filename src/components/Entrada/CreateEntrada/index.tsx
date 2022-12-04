@@ -1,4 +1,5 @@
-import { Button, Flex, Image, Input, Select, Stack, Text } from "@chakra-ui/react";
+import { Button, Collapse, Flex, Image, Input, Select, Slide, Stack, Text } from "@chakra-ui/react";
+import { useState } from "react";
 import { FiArrowLeft } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import { usePicasso } from "../../../hooks/usePicasso";
@@ -7,13 +8,15 @@ import SidebarWithHeader from "../../Sidebar";
 export default function CreateEntradaComponent() {
 
     const theme = usePicasso();
+    const [isAluguel, setIsAluguel] = useState<boolean>()
 
+    console.log(isAluguel)
     return (
         <SidebarWithHeader>
             <Flex justifyContent="center" alignItems="center">
                 <Flex flexDirection="column" gap="10" p="10">
                     <Link to="/entradas" style={{ width: "max-content" }}>
-                        <Flex align="center" gap="2">
+                        <Flex align="center" gap="2" transition="0.5s" _hover={{ opacity: 0.4 }}>
                             <Image as={FiArrowLeft} size={24} />
                             <Text w="max-content">Voltar</Text>
                         </Flex>
@@ -53,16 +56,30 @@ export default function CreateEntradaComponent() {
                         <Stack spacing={3}>
                             <Select variant='outline' placeholder='Escolha uma opção...'>
                                 <option value='option1'>Aluguel</option>
-                                <option value='option1'>Venda</option>
+                                <option value='option1' >Venda</option>
                             </Select>
                         </Stack>
                     </Flex>
-                    <Button bg={'#dfbda1'}
-                        color={'white'}
-                        _hover={{
-                            bg: '#dfbda1',
-                            opacity: 0.5
-                        }}>Criar</Button>
+                        <Flex flexDirection="column" gap="2">
+                            <Text>Data do aluguel</Text>
+                            <Input w="25rem" h="max" py="2" size={"lg"} type="date" />
+                        </Flex>
+                        <Flex flexDirection="column" gap="2">
+                            <Text>Data de entrega</Text>
+                            <Input w="25rem" h="max" py="2" size={"lg"} type="date" />
+                        </Flex>
+                        <Button 
+                            w="100%"
+                            type="submit"
+                            bgColor={theme.background.criarButton}
+                            color={'white'}
+                            transition="0.5s"
+                            _hover={{
+                                opacity: 0.7,
+                            }}
+                        >
+                            Criar
+                        </Button>
                 </Flex>
             </Flex>
         </SidebarWithHeader>

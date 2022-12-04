@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { FiArrowLeft } from "react-icons/fi";
 import { Link, useParams } from "react-router-dom";
 import { useAuth } from "../../../hooks/useAuth";
+import { usePicasso } from "../../../hooks/usePicasso";
 import api from "../../../services/api";
 import SidebarWithHeader from "../../Sidebar";
 
@@ -23,6 +24,7 @@ export default function EditUserComponent() {
     const { id } = useParams();
     const { register, handleSubmit, reset } = useForm({defaultValues: editUser});
     const { token } = useAuth()
+    const theme = usePicasso();
 
     useEffect(() => {
         api
@@ -52,7 +54,7 @@ export default function EditUserComponent() {
             <Flex justifyContent="center" alignItems="center">
                 <Flex flexDirection="column" gap="10" p="10" >
                     <Link to="/listar-usuario" style={{ width: "max-content" }}>
-                        <Flex align="center" gap="2">
+                        <Flex align="center" gap="2" transition="0.5s" _hover={{ opacity: 0.4 }}>
                             <Image as={FiArrowLeft} size={24} />
                             <Text w="max-content">Voltar</Text>
                         </Flex>
@@ -80,14 +82,17 @@ export default function EditUserComponent() {
                                 </Select>
                             </Stack>
                         </Flex>
-                        <Button bg={'#dfbda1'}
+                        <Button 
+                            bgColor={theme.background.criarButton}
                             color={'white'}
                             type="submit"
-                            mt="2"
+                            transition="0.5s"
                             _hover={{
-                                bg: '#dfbda1',
-                                opacity: 0.5
-                            }}>Salvar</Button>
+                                opacity: 0.7,
+                            }}
+                        >
+                            Salvar
+                        </Button>
                     </form>
                 </Flex>
             </Flex>

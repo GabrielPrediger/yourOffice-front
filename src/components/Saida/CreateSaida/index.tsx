@@ -30,33 +30,35 @@ export default function CreateSaidaComponent() {
             <Flex justifyContent="center" alignItems="center">
                 <Flex flexDirection="column" gap="10" p="10">
                     <Link to="/saidas" style={{ width: "max-content" }}>
-                        <Flex align="center" gap="2">
+                        <Flex align="center" gap="2" transition="0.5s" _hover={{ opacity: 0.4 }}>
                             <Image as={FiArrowLeft} size={24} />
                             <Text w="max-content">Voltar</Text>
                         </Flex>
                     </Link>
                     <form onSubmit={handleSubmit(onSubmitForm)}>
-                        <Flex flexDirection="column" gap="2">
+                        <Flex flexDirection="column" gap="2" pb="4">
                             <Text>Valor</Text>
                             <Input placeholder="Digite aqui um valor..." _placeholder={{ color: "#A0AEC0"}} w="25rem" h="max" py="2" size={"lg"} {...register("valor", { required: true} )} />
                         </Flex>
-                        <Flex flexDirection="column" gap="2">
+                        <Flex flexDirection="column" gap="2" pb="4">
                             <Text>Descrição</Text>
                             <Input placeholder="Digite aqui uma descrição..." _placeholder={{ color: "#A0AEC0"}} w="25rem" h="max" py="2" size={"lg"} type="text" {...register("descricao", { required: true })} />
                         </Flex>
-                        <Flex flexDirection="column" gap="2">
+                        <Flex flexDirection="column" gap="2" pb="4">
                             <Text>Data</Text>
                             <Input w="25rem" h="max" py="2" size={"lg"} type="date" {...register("data" , { required: true })} />
                         </Flex>
                         <Button 
+                            w="100%"
                             type="submit"
-                            bg={'#dfbda1'}
+                            bgColor={theme.background.criarButton}
                             color={'white'}
+                            transition="0.5s"
                             _hover={{
-                                bg: '#dfbda1',
-                                opacity: 0.5
-                            }}>
-                                Criar
+                                opacity: 0.7,
+                            }}
+                        >
+                            Criar
                         </Button>
                     </form>
                 </Flex>

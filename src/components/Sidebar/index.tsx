@@ -19,6 +19,8 @@ import {
   MenuButton,
   MenuItem,
   MenuList,
+  Button,
+  useColorMode,
 } from '@chakra-ui/react';
 import {
   FiHome,
@@ -36,13 +38,16 @@ import {
 } from 'react-icons/hi';
 import {
   BsSortDown,
-  BsSortUp
+  BsSortUp,
+  BsSun
 } from 'react-icons/bs';
 import { IconType } from 'react-icons';
 import { ReactText } from 'react';
 import { Link } from 'react-router-dom';
 import { useUserLogged } from '../../hooks/useUserLogged';
 import { useAuth } from '../../hooks/useAuth';
+import { MdNightlightRound } from 'react-icons/md';
+import { usePicasso } from '../../hooks/usePicasso';
 
 interface LinkItemProps {
   name: string;
@@ -132,6 +137,8 @@ interface NavItemProps extends FlexProps {
   children: ReactText;
 }
 const NavItem = ({ icon, link, children, ...rest }: NavItemProps) => {
+  const theme = usePicasso()
+
   return (
     <Link to={link} style={{ textDecoration: 'none' }}>
       <Flex
@@ -142,7 +149,7 @@ const NavItem = ({ icon, link, children, ...rest }: NavItemProps) => {
         role="group"
         cursor="pointer"
         _hover={{
-          bg: '#e2d1c3',
+          bg: theme.background.navItem,
           color: 'white'
         }}
         {...rest}>
@@ -171,6 +178,8 @@ const Sidebar = ({ onOpen, ...rest }: MobileProps) => {
   const { logged, handleDisconnect } = useUserLogged()
   const str = logged
   const nome = str?.charAt(0).toUpperCase() + str?.slice(1);
+  const { colorMode, toggleColorMode } = useColorMode();
+  const theme = usePicasso()
 
   return (
     <Flex
@@ -178,7 +187,7 @@ const Sidebar = ({ onOpen, ...rest }: MobileProps) => {
       px={{ base: 4, md: 4 }}
       height="20"
       alignItems="center"
-      bg={'linear-gradient(135deg, #fdfcfb 0%, #e2d1c3 100%);'}
+      bg={theme.background.siderBar}
       borderBottomWidth="1px"
       borderBottomColor={useColorModeValue('gray.200', 'gray.700')}
       justifyContent={{ base: 'space-between', md: 'flex-end' }}
@@ -200,12 +209,9 @@ const Sidebar = ({ onOpen, ...rest }: MobileProps) => {
       </Text>
 
       <HStack spacing={{ base: '0', md: '6' }}>
-        <IconButton
-          size="lg"
-          variant="ghost"
-          aria-label="open menu"
-          icon={<FiBell />}
-        />
+        <Button onClick={toggleColorMode} bg="transparent" _hover={{ opacity: 0.9}} color='white'>
+            {colorMode === 'light' ? <MdNightlightRound size={24} /> : <BsSun size={24} />}
+        </Button>
         <Flex alignItems={'center'}>
           <Menu>
             <MenuButton

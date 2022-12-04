@@ -8,8 +8,11 @@ import {
   Button,
   Text,
   useColorModeValue,
+  useColorMode,
 } from '@chakra-ui/react';
 import { useForm } from 'react-hook-form';
+import { BsSun } from 'react-icons/bs';
+import { MdNightlightRound } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../hooks/useAuth';
 import { usePicasso } from '../../../hooks/usePicasso'
@@ -24,6 +27,7 @@ const LoginComponent = () => {
   const { setToken, setRefreshToken } = useAuth()
   const { setLogged } = useUserLogged()
   const navigate = useNavigate()
+  const { colorMode, toggleColorMode } = useColorMode();
 
   const onSubmitForm = (data: any) => {
     setLogged(data.usuario)
@@ -37,17 +41,22 @@ const LoginComponent = () => {
 
   return (
     <Flex
+      minW={'max'}
       minH={'100vh'}
       align={'center'}
       justify={'center'}
-      bg={"linear-gradient(135deg, #fdfcfb 0%, #e2d1c3 100%)"}>
-      <Stack spacing={8} mx={'auto'} maxW={'lg'} py={12} px={6}>
+      bg={theme.background.login}
+    >
+      <Stack align={'center'} justify={'center'} spacing={8} py={12}>
+        <Button w="25%" onClick={toggleColorMode} _hover={{  opacity: 0.5 }} bg={'transparent'} color={theme.colors.blackWhite}>
+            {colorMode === 'light' ? <MdNightlightRound size={24} /> : <BsSun size={24} />}
+        </Button>
         <Box
           rounded={'lg'}
           bg={useColorModeValue('white', 'gray.700')}
           boxShadow={'lg'}
           py={'16'}
-          px={'10'}
+          px={['22','22','10','10']}
         >
           <Flex pb="10">
             <Text fontSize="2xl" fontFamily="monospace" fontWeight="bold">
@@ -66,11 +75,11 @@ const LoginComponent = () => {
               </FormControl>
               <Stack spacing={10} pt={'2'}>
                 <Button
-                  bg={'#dfbda1'}
+                  bg={theme.background.loginButton}
                   color={'white'}
                   type="submit"
+                  transition="0.5s"
                   _hover={{
-                    bg: '#e2d1c3',
                     opacity: 0.5
                   }}>
                   Sign in

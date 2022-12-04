@@ -7,6 +7,7 @@ import api from "../../../services/api";
 import { CardUser } from "../CardUser";
 import { useAuth } from "../../../hooks/useAuth";
 import { IoIosArrowDown } from 'react-icons/io'
+import { usePicasso } from "../../../hooks/usePicasso";
 
 export default function ListUser() {
 
@@ -14,6 +15,7 @@ export default function ListUser() {
 
     const [ user, setUser] = useState([]);
     const { token } = useAuth()
+    const theme = usePicasso();
 
     useEffect(() => {
     api
@@ -30,7 +32,7 @@ export default function ListUser() {
     return (
         <SidebarWithHeader>
             <Link to="/usuarios" style={{ width: "max-content" }}>
-                <Flex align="center" gap="2" my="1rem">
+                <Flex align="center" gap="2" my="1rem" transition="0.5s" _hover={{ opacity: 0.4 }}>
                     <Image as={FiArrowLeft} size={24} />
                     <Text w="max-content">Voltar</Text>
                 </Flex>
@@ -41,14 +43,14 @@ export default function ListUser() {
                         <MenuButton 
                             as={Button} 
                             rightIcon={<IoIosArrowDown />}
-                            _hover={{ background: '#e2cab7'}}
-                            _active={{ background: '#e2cab7'}}
+                            _hover={{ background: theme.background.filtroHover}}
+                            _active={{ background: theme.background.filtroHover}}
                         >
                             Filtro
                         </MenuButton>
                         <MenuList>
-                            <MenuItem _hover={{ background: '#e2cab7'}}>Crescente</MenuItem>
-                            <MenuItem _hover={{ background: '#e2cab7'}}>Decrescente</MenuItem>
+                            <MenuItem _hover={{ background: theme.background.filtroHoverSelected}}>Crescente</MenuItem>
+                            <MenuItem _hover={{ background: theme.background.filtroHoverSelected}}>Decrescente</MenuItem>
                         </MenuList>
                     </Menu>
                 </Flex>

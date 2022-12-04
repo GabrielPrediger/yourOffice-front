@@ -10,31 +10,44 @@ import { CardSaida } from "../CardSaida";
 import { ISaidas } from "../../../Types/CrudTypes";
 import { formatDate } from "../../../utils/formatDate";
 import { IoIosArrowDown } from "react-icons/io";
+import { usePicasso } from "../../../hooks/usePicasso";
 
 export default function ListSaida() {
 
     const { isOpen, onOpen, onClose } = useDisclosure()
     const { token } = useAuth()
+    const theme = usePicasso();
 
     const [saida, setSaida] = useState<ISaidas[]>([]);
+    const [filtro, setFiltro] = useState<string>('');
 
     useEffect(() => {
+        if(filtro === 'Data crescente' || filtro === undefined){
         api
-            .get("/get-user-by-data", {headers: {
+            .get("/get-saida-by-data", {headers: {
                 Authorization: `Bearer ${token}`
              }})
             .then((response: any) => {setSaida(response.data)})
             .catch((err: any) => {
                 console.error("ops! ocorreu um erro" + err);
             });
-    }, [token]);
+        } else {
+            api
+            .get("/get-saida-by-value", {headers: {
+                Authorization: `Bearer ${token}`
+             }})
+            .then((response: any) => {setSaida(response.data); console.log(response);})
+            .catch((err: any) => {
+                console.error("ops! ocorreu um erro" + err);
+            });
+        }
 
-    console.log(saida, 'saida')   //retorna o array certinho
+    }, [filtro, token]);
 
     return (
         <SidebarWithHeader>
             <Link to="/saidas" style={{ width: "max-content" }}>
-                <Flex align="center" gap="2" my="1rem">
+                <Flex align="center" gap="2" my="1rem" transition="0.5s" _hover={{ opacity: 0.4 }}>
                     <Image as={FiArrowLeft} size={24} />
                     <Text w="max-content">Voltar</Text>
                 </Flex>
@@ -45,14 +58,14 @@ export default function ListSaida() {
                         <MenuButton 
                             as={Button} 
                             rightIcon={<IoIosArrowDown />}
-                            _hover={{ background: '#e2cab7'}}
-                            _active={{ background: '#e2cab7'}}
+                            _hover={{ background: theme.background.filtroHover}}
+                            _active={{ background: theme.background.filtroHover}}
                         >
                             Filtro
                         </MenuButton>
                         <MenuList>
-                            <MenuItem _hover={{ background: '#e2cab7'}}>Data crescente</MenuItem>
-                            <MenuItem _hover={{ background: '#e2cab7'}}>Valor crescente</MenuItem>
+                            <MenuItem onClick={() => setFiltro('Data crescente')}_hover={{ background: theme.background.filtroHoverSelected}}>Data crescente</MenuItem>
+                            <MenuItem onClick={() => setFiltro('Valor crescente')} _hover={{ background: theme.background.filtroHoverSelected}}>Valor crescente</MenuItem>
                         </MenuList>
                     </Menu>
                 </Flex>

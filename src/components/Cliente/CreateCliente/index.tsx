@@ -30,7 +30,7 @@ export default function CreateClienteComponent() {
             <Flex justifyContent="center" alignItems="center">
                 <Flex flexDirection="column" gap="10" p="10">
                     <Link to="/clientes" style={{ width: "max-content" }}>
-                        <Flex align="center" gap="2">
+                        <Flex align="center" gap="2" transition="0.5s" _hover={{ opacity: 0.4 }}>
                             <Image as={FiArrowLeft} size={24} />
                             <Text w="max-content">Voltar</Text>
                         </Flex>
@@ -56,13 +56,17 @@ export default function CreateClienteComponent() {
                             <Text>Endereço</Text>
                             <Input placeholder="Digite aqui um endereço..." _placeholder={{ color: "#A0AEC0"}} w="25rem" h="max" py="2" size={"lg"} {...register("endereco", { required: true })} />
                         </Flex>
-                        <Button bg={'#dfbda1'}
-                            color={'white'}
+                        <Button 
                             type="submit"
+                            bgColor={theme.background.criarButton}
+                            color={'white'}
+                            transition="0.5s"
                             _hover={{
-                                bg: '#dfbda1',
-                                opacity: 0.5
-                            }}>Criar</Button>
+                                opacity: 0.7,
+                            }}
+                        >
+                            Criar
+                        </Button>
                     </form>
                 </Flex>
             </Flex>

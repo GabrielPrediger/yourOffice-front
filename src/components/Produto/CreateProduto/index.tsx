@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import { FiArrowLeft } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../../hooks/useAuth";
+import { usePicasso } from "../../../hooks/usePicasso";
 import api from "../../../services/api";
 import SidebarWithHeader from "../../Sidebar";
 
@@ -20,6 +21,7 @@ export default function CreateProdutoComponent() {
 
     const { register, handleSubmit } = useForm();
     const { token } = useAuth()
+    const theme = usePicasso();
 
     function convertImageToBase64(file: File) {
         return new Promise((resolve, reject) => {
@@ -49,7 +51,7 @@ export default function CreateProdutoComponent() {
             <Flex justifyContent="center" alignItems="center">
                 <Flex flexDirection="column" gap="10" p="10">
                     <Link to="/produtos" style={{ width: "max-content" }}>
-                        <Flex align="center" gap="2">
+                        <Flex align="center" gap="2" transition="0.5s" _hover={{ opacity: 0.4 }}>
                             <Image as={FiArrowLeft} size={24} />
                             <Text w="max-content">Voltar</Text>
                         </Flex>
@@ -84,13 +86,18 @@ export default function CreateProdutoComponent() {
                             <Text>Preço</Text>
                             <Input placeholder="Digite aqui um valor..." _placeholder={{ color: "#A0AEC0"}} w="25rem" h="max" py="2" size={"lg"} type="number" {...register("preco", { required: true })} />
                         </Flex>
-                        <Button bg={'#dfbda1'}
-                            color={'white'}
+                        <Button 
+                            w="100%"
                             type="submit"
+                            bgColor={theme.background.criarButton}
+                            color={'white'}
+                            transition="0.5s"
                             _hover={{
-                                bg: '#dfbda1',
-                                opacity: 0.5
-                            }}>Criar</Button>
+                                opacity: 0.7,
+                            }}
+                        >
+                            Criar
+                        </Button>
                     </form>        
                 </Flex>
             </Flex>

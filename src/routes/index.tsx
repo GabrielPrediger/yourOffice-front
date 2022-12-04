@@ -6,6 +6,7 @@ import EditarEntradaComponent from '../components/Entrada/EditEntrada'
 import ListEntrada from '../components/Entrada/ListEntrada'
 import { ClientePage } from '../components/pages/Cliente'
 import { EntradaPage } from '../components/pages/Entrada'
+import { Landing } from '../components/pages/Landing'
 import { LoginComponent } from '../components/pages/Login'
 import { MainMenuComponent } from '../components/pages/MainMenu'
 import { PageNotFound } from '../components/pages/PageNotFound'
@@ -122,7 +123,11 @@ export const notAuthErrorRoute: IRoute[] = [
 
 export const notAuthRoutes: IRoute[] = [
     {
-        path: '/',
+        path: '/entrar',
         element: <LoginComponent />
+    },
+    {
+        path: '/',
+        element: <Landing />
     },
 ]

@@ -1,5 +1,5 @@
 import { useEffect, useState, useMemo} from "react";
-import { Button, Checkbox, Flex, Image, Menu, MenuButton, MenuItem, MenuList, Stack, Text} from "@chakra-ui/react";
+import { Button, Checkbox, Flex, Image, Menu, MenuButton, MenuItem, MenuList, Stack, Text, theme} from "@chakra-ui/react";
 import { FiArrowLeft } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import SidebarWithHeader from "../../Sidebar";
@@ -9,6 +9,7 @@ import { useAuth } from "../../../hooks/useAuth";
 import { formatDate } from "../../../utils/formatDate";
 import { Pagination } from "../../Pagination";
 import { IoIosArrowDown } from "react-icons/io";
+import { usePicasso } from "../../../hooks/usePicasso";
 // import { usePaginator } from 'chakra-paginator';
 // import { handlePaginate } from "../../../utils/handlePaginate";
 
@@ -16,6 +17,7 @@ export default function ListCliente() {
 
     const [cliente, setCliente] = useState([]);
     const { token } = useAuth()
+    const theme = usePicasso();
 
 	// const quantityPerPage = 10;
 
@@ -45,7 +47,7 @@ export default function ListCliente() {
     return (
         <SidebarWithHeader>
             <Link to="/clientes" style={{ width: "max-content" }}>
-                <Flex align="center" gap="2" my="1rem">
+                <Flex align="center" gap="2" my="1rem" transition="0.5s" _hover={{ opacity: 0.4 }}>
                     <Image as={FiArrowLeft} size={24} />
                     <Text w="max-content">Voltar</Text>
                 </Flex>
@@ -56,13 +58,13 @@ export default function ListCliente() {
                         <MenuButton 
                             as={Button} 
                             rightIcon={<IoIosArrowDown />}
-                            _hover={{ background: '#e2cab7'}}
-                            _active={{ background: '#e2cab7'}}
+                            _hover={{ background: theme.background.filtroHover}}
+                            _active={{ background: theme.background.filtroHover}}
                         >
                             Filtro
                         </MenuButton>
                         <MenuList>
-                            <MenuItem _hover={{ background: '#e2cab7'}}>Nome Crescente</MenuItem>
+                            <MenuItem _hover={{ background: theme.background.filtroHoverSelected}}>Nome Crescente</MenuItem>
                         </MenuList>
                     </Menu>
                 </Flex>

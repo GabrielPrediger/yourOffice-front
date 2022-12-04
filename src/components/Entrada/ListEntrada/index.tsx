@@ -9,7 +9,7 @@ export default function ListEntrada() {
     return (
         <SidebarWithHeader>
             <Link to="/entradas" style={{ width: "max-content" }}>
-                <Flex align="center" gap="2" my="1rem">
+                <Flex align="center" gap="2" my="1rem" transition="0.5s" _hover={{ opacity: 0.4 }}>
                     <Image as={FiArrowLeft} size={24} />
                     <Text w="max-content">Voltar</Text>
                 </Flex>

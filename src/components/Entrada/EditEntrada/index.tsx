@@ -13,7 +13,7 @@ export default function EditarEntradaComponent() {
             <Flex justifyContent="center" alignItems="center">
             <Flex flexDirection="column" gap="10" p="10">
                     <Link to="/entradas" style={{ width: "max-content" }}>
-                        <Flex align="center" gap="2">
+                        <Flex align="center" gap="2" transition="0.5s" _hover={{ opacity: 0.4 }}>
                             <Image as={FiArrowLeft} size={24} />
                             <Text w="max-content">Voltar</Text>
                         </Flex>
@@ -57,12 +57,17 @@ export default function EditarEntradaComponent() {
                             </Select>
                         </Stack>
                     </Flex>
-                    <Button bg={'#dfbda1'}
+                    <Button 
+                        type="submit"
+                        bgColor={theme.background.criarButton}
                         color={'white'}
+                        transition="0.5s"
                         _hover={{
-                            bg: '#dfbda1',
-                            opacity: 0.5
-                        }}>Criar</Button>
+                            opacity: 0.7,
+                        }}
+                    >
+                        Salvar
+                    </Button>
                 </Flex>
             </Flex>
         </SidebarWithHeader>
