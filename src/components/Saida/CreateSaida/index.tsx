@@ -6,6 +6,7 @@ import { useAuth } from "../../../hooks/useAuth";
 import { usePicasso } from "../../../hooks/usePicasso";
 import api from "../../../services/api";
 import SidebarWithHeader from "../../Sidebar";
+import { useToasty } from "../../Tooltip";
 
 export default function CreateSaidaComponent() {
 
@@ -13,16 +14,30 @@ export default function CreateSaidaComponent() {
     const { token } = useAuth()
 
     const { register, handleSubmit } = useForm();
+    const { toast } = useToasty();
 
     const onSubmitForm = (data: any) => {
         api
             .post("/create-saida", { valor: data.valor, data: data.data, descricao: data.descricao }, {headers: {
                 Authorization: `Bearer ${token}`
              }})
-            .then((response: any) => console.log(response))
-            .catch((err: any) => {
+             .then((response: any) => {console.log(response); setToast(response.status)})
+             .catch((err: any) => {
                 console.error("ops! ocorreu um erro" + err);
+                setToast(err)
             });
+    }
+
+    const setToast = (status: any) => {
+        if(status === 201){
+            toast({
+                id: "toast1",
+                position: "top-right",
+                status: "success",
+                title: "Dado criado!",
+                description: "Vá para a lista de despesas para visualizar!",
+            });
+        } 
     }
 
     return (

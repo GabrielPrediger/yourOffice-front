@@ -7,6 +7,7 @@ import { useAuth } from "../../../hooks/useAuth";
 import { usePicasso } from "../../../hooks/usePicasso";
 import api from "../../../services/api";
 import SidebarWithHeader from "../../Sidebar";
+import { useToasty } from "../../Tooltip";
 
 interface IUser {
     id: number;
@@ -23,6 +24,7 @@ export default function EditUserComponent() {
     const [editUser, setEditUser] = useState<IUser>();
     const { id } = useParams();
     const { register, handleSubmit, reset } = useForm({defaultValues: editUser});
+    const { toast } = useToasty();
     const { token } = useAuth()
     const theme = usePicasso();
 
@@ -31,7 +33,7 @@ export default function EditUserComponent() {
             .get(`/get-user-id/${Number(id)}`, {headers: {
                 Authorization: `Bearer ${token}`
              }})
-            .then((response) => {setEditUser(response.data); reset(response.data);})
+            .then((response) => {setEditUser(response.data); reset(response.data)})
             .catch((err) => {
             console.error("ops! ocorreu um erro" + err);
             });
@@ -43,11 +45,22 @@ export default function EditUserComponent() {
             .put(`/update-user/${Number(id)}`, data, {headers: {
                 Authorization: `Bearer ${token}`
              }})
-            .then((response) => console.log(response, 'Foi!'))
-            .catch((err) => {
+             .then((response) => {console.log(response, 'Foi!'); setToast()})
+             .catch((err: Error) => {
                 console.error("ops! ocorreu um erro" + err);
             });
     }
+
+    const setToast = () => {
+            toast({
+                id: "toastEditUser2",
+                position: "top-right",
+                status: "success",
+                title: "Dados editados!",
+                description: "As informações foram alteradas com sucesso!",
+            });
+    }
+
 
     return (
         <SidebarWithHeader>

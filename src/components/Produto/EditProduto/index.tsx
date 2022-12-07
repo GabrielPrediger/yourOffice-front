@@ -2,10 +2,10 @@ import { useEffect, useState } from "react";
 import { Button, Flex, Image, Input,  Select,  Stack,  Text } from "@chakra-ui/react";
 import { FiArrowLeft } from "react-icons/fi";
 import { Link, useParams } from "react-router-dom";
-import { usePicasso } from "../../../hooks/usePicasso";
 import SidebarWithHeader from "../../Sidebar";
 import { useForm } from "react-hook-form";
 import api from "../../../services/api";
+import { useToasty } from "../../Tooltip";
 import { useAuth } from "../../../hooks/useAuth";
 
 interface IProduct {
@@ -23,7 +23,7 @@ const select_options = [{id: 1, value: 'Aluguel'}, {id: 2, value: 'Venda'}]
 
 export default function EditarProdutoComponent() {
 
-    const theme = usePicasso();
+    const { toast } = useToasty();
 
     const [editProduto, setEditProduto] = useState<IProduct>();
     const { id } = useParams();
@@ -36,7 +36,9 @@ export default function EditarProdutoComponent() {
             fileReader.readAsDataURL(file)
 
             fileReader.onload = () => resolve(fileReader.result)
-            fileReader.onerror = (err) => reject(err)
+            setToast(2);
+            fileReader.onerror = (err) => { reject(err); }
+            
         })
     }
 
@@ -58,13 +60,33 @@ export default function EditarProdutoComponent() {
             .put(`/update-produto/${Number(id)}`, request, {headers: {
                 Authorization: `Bearer ${token}`
              }})
-            .then((response) => console.log(response, 'Foi!'))
-            .catch((err) => {
-                console.error("ops! ocorreu um erro" + err);
+             .then((response) => {console.log(response, 'Foi!'); setToast(1)})
+             .catch((err: Error) => {
+                console.error("ops! ocorreu um erro" + setToast(2));
         });
     }
 
-    console.log(editProduto?.foto, 'aaaaa')
+    const setToast = (status: any) => {
+        console.log(status)
+        if (status === 1){
+            toast({
+                id: "toastProdutoEditSuc",
+                position: "top-right",
+                status: "success",
+                title: "Dados editados!",
+                description: "As informações foram alteradas com sucesso!",
+            });
+        } 
+        if(status === 2){
+            toast({
+                id: "toastProdutoEditError",
+                position: "top-right",
+                status: "error",
+                title: "Dados ja existentes!",
+                description: "Nome de produto já cadastrado!",
+            });
+        }
+    }
 
     return (
         <SidebarWithHeader>

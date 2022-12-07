@@ -7,6 +7,7 @@ import { useAuth } from "../../../hooks/useAuth";
 import { usePicasso } from "../../../hooks/usePicasso";
 import api from "../../../services/api";
 import SidebarWithHeader from "../../Sidebar";
+import { useToasty } from "../../Tooltip";
 
 interface ISaidas {
     valor: number;
@@ -21,6 +22,7 @@ export default function EditarSaidaComponent() {
     const [editSaida, setEditSaida] = useState<ISaidas>();
     const { id } = useParams();
     const { register, handleSubmit, reset } = useForm({defaultValues: editSaida});
+    const { toast } = useToasty();
     const { token } = useAuth()
 
     useEffect(() => {
@@ -41,11 +43,21 @@ export default function EditarSaidaComponent() {
             .put(`/update-saida/${Number(id)}`, data, {headers: {
                 Authorization: `Bearer ${token}`
              }})
-            .then((response) => console.log(response, 'Foi!'))
-            .catch((err) => {
+             .then((response) => {console.log(response, 'Foi!'); setToast()})
+             .catch((err) => {
                 console.error("ops! ocorreu um erro" + err);
             });
     }
+
+    const setToast = () => {
+        toast({
+            id: "toastEditSaida",
+            position: "top-right",
+            status: "success",
+            title: "Dados editados!",
+            description: "As informações foram alteradas com sucesso!",
+        });
+}
 
     return (
         <SidebarWithHeader>

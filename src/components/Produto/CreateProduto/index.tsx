@@ -6,6 +6,7 @@ import { useAuth } from "../../../hooks/useAuth";
 import { usePicasso } from "../../../hooks/usePicasso";
 import api from "../../../services/api";
 import SidebarWithHeader from "../../Sidebar";
+import { useToasty } from "../../Tooltip";
 
 interface IProduct {
     id?: number;
@@ -20,6 +21,7 @@ interface IProduct {
 export default function CreateProdutoComponent() {
 
     const { register, handleSubmit } = useForm();
+    const { toast } = useToasty();
     const { token } = useAuth()
     const theme = usePicasso();
 
@@ -36,14 +38,37 @@ export default function CreateProdutoComponent() {
     const onSubmitForm = async (data: IProduct | any) => {
         const request = { nome: data.nome, descricao: data.descricao, quantidade: data.quantidade, tipo: data.tipo, foto: await convertImageToBase64(data.foto[0]), preco: data.preco}
         api
-            .post("/create-produto", request, {headers: {
+            .post("/create-produto",  request, {headers: {
                 Authorization: `Bearer ${token}`
              }})
-            .then((response: any) => console.log(response, 'foi'))
-            .catch((err: any) => {
-                console.error("ops! ocorreu um erro" + err);
+             .then((response: any) => {console.log(response, 'foi'); setToast(response);})
+             .catch((err: any) => {
+                console.error("ops! ocorreu um erro" + setToast(err));
             });
     }
+
+    const setToast = (status: any) => {
+        console.log(status)
+        if (status.status === 201){
+            toast({
+                id: "toastProdutoCreate",
+                position: "top-right",
+                status: "success",
+                title: "Dado criado!",
+                description: "Vá para a lista de produtos para visualizar!",
+            });
+        } 
+        else if(status.response.status === 400){
+            toast({
+                id: "toastProdutoCreateError",
+                position: "top-right",
+                status: "error",
+                title: "Dados ja existentes!",
+                description: "Nome de produto já cadastrado!",
+            });
+        }
+    }
+
 
     return (
         <SidebarWithHeader>

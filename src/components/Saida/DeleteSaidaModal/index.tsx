@@ -1,6 +1,7 @@
 import { Button, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Text } from "@chakra-ui/react";
 import { useAuth } from "../../../hooks/useAuth";
 import api from "../../../services/api";
+import { useToasty } from "../../Tooltip";
 
 interface IModal {
     id: number;
@@ -10,6 +11,7 @@ interface IModal {
 
 export const DeleteSaidaModalComponent: React.FC<IModal> = props => {
     const { id, isOpen, onClose } = props;
+    const { toast } = useToasty();
     const { token } = useAuth()
 
     const onEditForm = () => {
@@ -21,7 +23,18 @@ export const DeleteSaidaModalComponent: React.FC<IModal> = props => {
         .catch((err) => {
         console.error("ops! ocorreu um erro" + err);
         });
+        setToast()
         onClose()
+    }
+
+    const setToast = () => {
+        toast({
+            id: "toastDeleteSaida",
+            position: "top-right",
+            status: "success",
+            title: "Dados deletados!",
+            description: "Saida deletada com sucesso!",
+        });
     }
 
     return (
