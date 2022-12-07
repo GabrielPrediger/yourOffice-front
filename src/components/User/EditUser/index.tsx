@@ -5,6 +5,7 @@ import { FiArrowLeft } from "react-icons/fi";
 import { Link, useParams } from "react-router-dom";
 import api from "../../../services/api";
 import SidebarWithHeader from "../../Sidebar";
+import { useToasty } from "../../Tooltip";
 
 interface IUser {
     id: number;
@@ -21,11 +22,12 @@ export default function EditUserComponent() {
     const [editUser, setEditUser] = useState<IUser>();
     const { id } = useParams();
     const { register, handleSubmit, reset } = useForm({defaultValues: editUser});
+    const { toast } = useToasty();
 
     useEffect(() => {
         api
             .get(`/get-user-id/${Number(id)}`)
-            .then((response) => {setEditUser(response.data); reset(response.data);})
+            .then((response) => {setEditUser(response.data); reset(response.data)})
             .catch((err) => {
             console.error("ops! ocorreu um erro" + err);
             });
@@ -35,11 +37,22 @@ export default function EditUserComponent() {
     const onEditForm = (data: any) => {
         api
             .put(`/update-user/${Number(id)}`, data)
-            .then((response) => console.log(response, 'Foi!'))
-            .catch((err) => {
+            .then((response) => {console.log(response, 'Foi!'); setToast()})
+            .catch((err: Error) => {
                 console.error("ops! ocorreu um erro" + err);
             });
     }
+
+    const setToast = () => {
+            toast({
+                id: "toastEditUser2",
+                position: "top-right",
+                status: "success",
+                title: "Dados editados!",
+                description: "As informações foram alteradas com sucesso!",
+            });
+    }
+
 
     return (
         <SidebarWithHeader>

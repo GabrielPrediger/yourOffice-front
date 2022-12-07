@@ -6,6 +6,7 @@ import { usePicasso } from "../../../hooks/usePicasso";
 import SidebarWithHeader from "../../Sidebar";
 import { useForm } from "react-hook-form";
 import api from "../../../services/api";
+import { useToasty } from "../../Tooltip";
 
 interface IUser {
     id: number;
@@ -23,6 +24,7 @@ export default function EditarClienteComponent() {
     const [editCliente, setEditCliente] = useState<IUser>();
     const { id } = useParams();
     const { register, handleSubmit, reset } = useForm({defaultValues: editCliente });
+    const { toast } = useToasty();
 
     useEffect(() => {
         api
@@ -36,11 +38,21 @@ export default function EditarClienteComponent() {
     const onEditForm = (data: any) => {
         api
             .put(`/update-cliente/${Number(id)}`, data)
-            .then((response) => console.log(response, 'Foi!'))
+            .then((response) => {console.log(response, 'Foi!'); setToast()})
             .catch((err) => {
                 console.error("ops! ocorreu um erro" + err);
         });
     }
+
+    const setToast = () => {
+        toast({
+            id: "toastEditCliente",
+            position: "top-right",
+            status: "success",
+            title: "Dados editados!",
+            description: "As informações foram alteradas com sucesso!",
+        });
+}
 
     return (
         <SidebarWithHeader>

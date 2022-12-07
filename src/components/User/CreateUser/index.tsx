@@ -6,21 +6,44 @@ import SidebarWithHeader from "../../Sidebar";
 import { useEffect, useState } from "react";
 import api from "../../../services/api";
 import { useForm } from "react-hook-form";
+import { useToasty } from "../../Tooltip";
 
 export default function CreateUserComponent() {
 
     const theme = usePicasso();
+    const { toast } = useToasty();
     const { register, handleSubmit } = useForm();
 
     const onSubmitForm = (data: any) => {
         console.log(data, 'user')
         api
-        .post("/create-user", { usuario: data.usuario, senha: data.senha, email: data.email, permissao: data.permissao })
-        .then((response: any) => console.log(response))
-        .catch((err: any) => {
-        console.error("ops! ocorreu um erro" + err);
-        });
+            .post("/create-user", { usuario: data.usuario, senha: data.senha, email: data.email, permissao: data.permissao })
+            .then((response: any) => {console.log(response); setToast(response.status);})
+            .catch((err: Error) => {
+                console.log("ops! ocorreu um erro" + setToast(err));
+            });
     }
+
+    const setToast = (status: any) => {
+        if(status === 201){
+            toast({
+                id: "toast1",
+                position: "top-right",
+                status: "success",
+                title: "Usuario criado!",
+                description: "Vá para a lista de usuario para visualizar!",
+            });
+        } else if(status.response.status === 400){
+            toast({
+                id: "toast2",
+                position: "top-right",
+                status: "error",
+                title: "Dados ja existentes!",
+                description: "Usuario e/ou email já cadastrados!",
+            });
+        }
+    }
+
 
     return (
         <SidebarWithHeader>
