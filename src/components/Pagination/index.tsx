@@ -9,6 +9,7 @@ import {
 	PaginationContainer,
 	PaginationPageGroup,
 } from '@ajna/pagination';
+import { usePicasso } from '../../hooks/usePicasso';
 
 export const Pagination: FC<{
 	quantityOfPages: number;
@@ -19,6 +20,8 @@ export const Pagination: FC<{
 		{ length: quantityOfPages },
 		(_, counter: number) => counter + 1
 	);
+
+	const theme = usePicasso()
 	return (
 		<ChakraProvider>
 			<ChakraPagination
@@ -37,7 +40,7 @@ export const Pagination: FC<{
 				>
 					<PaginationPrevious
 						borderRadius={['9999rem', '9999rem', '3rem', '3rem']}
-						bgColor={'red'}
+						bgColor={theme.background.filtroHover}
 						py="1.5"
 						px={['1.5', '1.5', '4', '4']}
 						h="max-content"
@@ -48,11 +51,11 @@ export const Pagination: FC<{
 						_hover={
 							currentPage === quantityOfPages
 								? { opacity: '0.2' }
-								: { bgColor: 'red' }
+								: { opacity: '0.7' }
 						}
 					>
 						<MdArrowBack color="white" size={15} />
-						<Text display={['none', 'none', 'unset', 'unset']}>Previous</Text>
+						<Text display={['none', 'none', 'unset', 'unset']}>Anterior</Text>
 					</PaginationPrevious>
 
 					<PaginationPageGroup
@@ -73,16 +76,19 @@ export const Pagination: FC<{
 								page={page}
 								color={
 									page === currentPage
-										? 'cyan'
-										: 'white'
+										? theme.colors.brown
+										: theme.colors.blackWhite
 								}
+								fontWeight={page === currentPage
+									? 'bold'
+									: 'thin'}
 							/>
 						))}
 					</PaginationPageGroup>
 
 					<PaginationNext
 						borderRadius={['9999rem', '9999rem', '3rem', '3rem']}
-						bgColor='red'
+						bgColor={theme.background.filtroHover}
 						py="1.5"
 						px={['1.5', '1.5', '4', '4']}
 						h="max-content"
@@ -93,10 +99,10 @@ export const Pagination: FC<{
 						_hover={
 							currentPage === quantityOfPages
 								? { opacity: '0.2' }
-								: { bgColor: 'white' }
+								: { opacity: '0.7' }
 						}
 					>
-						<Text display={['none', 'none', 'unset', 'unset']}>Next</Text>
+						<Text display={['none', 'none', 'unset', 'unset']}>Proximo</Text>
 
 						<MdArrowForward color="white" size={15} />
 					</PaginationNext>

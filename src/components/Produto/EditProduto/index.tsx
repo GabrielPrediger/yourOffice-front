@@ -10,12 +10,12 @@ import { useAuth } from "../../../hooks/useAuth";
 
 interface IProduct {
     id?: number;
-    nome: string;
-    descricao: string;
-    quantidade: number;
-    tipo: string; //alugar ou vender
-    foto: string;
-    preco: number;
+    nome?: string;
+    descricao?: string;
+    quantidade?: number;
+    tipo?: string; //alugar ou vender
+    foto?: string;
+    preco?: number;
 }
 
 const select_options = [{id: 1, value: 'Aluguel'}, {id: 2, value: 'Venda'}]
@@ -52,6 +52,7 @@ export default function EditarProdutoComponent() {
     }, [id, reset, token]);
 
     const onEditForm = async (data: any) => {
+        console.log(data, 'dataaaaaaaa');
         const request = { nome: data.nome, descricao: data.descricao, quantidade: data.quantidade, tipo: data.tipo, foto: await convertImageToBase64(data.foto[0]), preco: data.preco}
         api
             .put(`/update-produto/${Number(id)}`, request, {headers: {
@@ -62,6 +63,8 @@ export default function EditarProdutoComponent() {
                 console.error("ops! ocorreu um erro" + err);
         });
     }
+
+    console.log(editProduto?.foto, 'aaaaa')
 
     return (
         <SidebarWithHeader>
@@ -97,7 +100,7 @@ export default function EditarProdutoComponent() {
                             </Stack>
                         </Flex>
                         <Flex flexDirection="column" gap="2" pb="5">
-                            <Text>Foto</Text>
+                        <Text>Foto</Text>
                             <Input w="25rem" h="max" py="2" size={"lg"} type="file" defaultValue={editProduto?.foto} {...register("foto")} />
                         </Flex>
                         <Flex flexDirection="column" gap="2" pb="5">

@@ -28,8 +28,8 @@ export default class Example extends PureComponent {
 
   render() {
     return (
-      <ResponsiveContainer width="100%" height="100%">
-        <PieChart width={400} height={400}>
+      <ResponsiveContainer width={400} height={400}>
+        <PieChart style={{ width: "100%", height:'100%'}} >
           <Pie
             data={data}
             cx="50%"

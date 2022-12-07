@@ -33,8 +33,8 @@ export const CardProduto: React.FC<IProduct> = props => {
                 <Image objectFit={'cover'} w="18rem" h="14rem" rounded={'lg'} src={foto} />
             </Flex>
             <Flex gap="2" flexDirection="column" w="90%" justifyContent="center" alignItems="center">
-                <Text color={'gray.500'} fontSize={'sm'} textTransform="uppercase">{nome}</Text>
-                <Text fontSize={'2xl'} fontFamily={'body'} fontWeight={500}>{descricao}</Text>
+                <Text color={'gray.500'} fontSize={'sm'} textTransform="uppercase">{descricao}</Text>
+                <Text w={'max'} textOverflow="ellipsis" fontSize={'2xl'} fontFamily={'body'} fontWeight={500} overflow="hidden">{nome}</Text>
                 <Text fontSize={'2xl'} fontFamily={'body'} fontWeight={500}>R$ {preco}</Text>
                 <Text color={'gray.500'} fontSize={'xs'} fontFamily={'body'} fontWeight={500}>({tipo})</Text>
                 <Flex gap="8" pt="4">

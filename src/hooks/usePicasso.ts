@@ -26,7 +26,7 @@ const usePicasso = () => {
 			typeCard: useColorModeValue("white", "gray.900"),
 			filtroHover: useColorModeValue('#e2cab7', "gray.900"),
 			filtroHoverSelected: useColorModeValue('#e2cab7', "#4A5568"),
-
+			menuStatistc: useColorModeValue('#F7FAFC', '#2D3748')
 		},
 		border: {
 			inputLogin: useColorModeValue("#F7FAFC", "#F7FAFC"),

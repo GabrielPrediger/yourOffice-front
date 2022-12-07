@@ -34,7 +34,6 @@ export default function CreateProdutoComponent() {
     }
 
     const onSubmitForm = async (data: IProduct | any) => {
-        console.log(data.foto[0].size > 50000000)
         const request = { nome: data.nome, descricao: data.descricao, quantidade: data.quantidade, tipo: data.tipo, foto: await convertImageToBase64(data.foto[0]), preco: data.preco}
         api
             .post("/create-produto", request, {headers: {
@@ -59,20 +58,20 @@ export default function CreateProdutoComponent() {
                     <form onSubmit={handleSubmit(onSubmitForm)}>
                         <Flex flexDirection="column" gap="2" pb="5">
                             <Text>Nome</Text>
-                            <Input placeholder="Digite aqui um nome..." _placeholder={{ color: "#A0AEC0"}} w="25rem" h="max" py="2" size={"lg"} type="text" {...register("nome", { required: true })} />
+                            <Input placeholder="Digite aqui um nome..." _placeholder={{ color: "#A0AEC0"}} w="25rem" h="max" py="2" size={"lg"} type="text" {...register("nome")} />
                         </Flex>
                         <Flex flexDirection="column" gap="2" pb="5">
                             <Text>Descrição</Text>
-                            <Input placeholder="Digite aqui uma descrição..." _placeholder={{ color: "#A0AEC0"}} w="25rem" h="max" py="2" size={"lg"} type="text" {...register("descricao, { required: true }")} />
+                            <Input placeholder="Digite aqui uma descrição..." _placeholder={{ color: "#A0AEC0"}} w="25rem" h="max" py="2" size={"lg"} type="text" {...register("descricao")} />
                         </Flex>
                         <Flex flexDirection="column" gap="2" pb="5">
                             <Text>Quantidade</Text>
-                            <Input placeholder="Digite aqui uma quantidade..." _placeholder={{ color: "#A0AEC0"}} w="25rem" h="max" py="2" size={"lg"} type="number" {...register("quantidade, { required: true }")} />
+                            <Input placeholder="Digite aqui uma quantidade..." _placeholder={{ color: "#A0AEC0"}} w="25rem" h="max" py="2" size={"lg"}  {...register("quantidade")} />
                         </Flex>
                         <Flex flexDirection="column" gap="2" pb="5">
                             <Text>Tipo</Text>
                             <Stack spacing={3}>
-                                <Select variant='outline' placeholder='Escolha uma opção...' {...register("tipo", { required: true })}>
+                                <Select variant='outline' placeholder='Escolha uma opção...' {...register("tipo")}>
                                     <option value='Aluguel'>Aluguel</option>
                                     <option value='Venda'>Venda</option>
                                 </Select>
@@ -80,11 +79,11 @@ export default function CreateProdutoComponent() {
                         </Flex>
                         <Flex flexDirection="column" gap="2" pb="5">
                             <Text>Foto</Text>
-                            <Input placeholder="Escolhe uma foto..." _placeholder={{ color: "#A0AEC0"}} w="25rem" h="max" py="2" size={"lg"} type="file" {...register("foto", { required: true })} />
+                            <Input placeholder="Escolhe uma foto..." _placeholder={{ color: "#A0AEC0"}} w="25rem" h="max" py="2" size={"lg"} type="file" {...register("foto")} />
                         </Flex>
                         <Flex flexDirection="column" gap="2" pb="5">
                             <Text>Preço</Text>
-                            <Input placeholder="Digite aqui um valor..." _placeholder={{ color: "#A0AEC0"}} w="25rem" h="max" py="2" size={"lg"} type="number" {...register("preco", { required: true })} />
+                            <Input placeholder="Digite aqui um valor..." _placeholder={{ color: "#A0AEC0"}} w="25rem" h="max" py="2" size={"lg"} {...register("preco")} />
                         </Flex>
                         <Button 
                             w="100%"

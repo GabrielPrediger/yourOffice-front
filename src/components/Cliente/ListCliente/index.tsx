@@ -1,5 +1,5 @@
 import { useEffect, useState, useMemo} from "react";
-import { Button, Checkbox, Flex, Image, Menu, MenuButton, MenuItem, MenuList, Stack, Text, theme} from "@chakra-ui/react";
+import { Button, Checkbox, Collapse, Flex, Image, Menu, MenuButton, MenuItem, MenuList, Stack, Text, theme} from "@chakra-ui/react";
 import { FiArrowLeft } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import SidebarWithHeader from "../../Sidebar";
@@ -10,39 +10,81 @@ import { formatDate } from "../../../utils/formatDate";
 import { Pagination } from "../../Pagination";
 import { IoIosArrowDown } from "react-icons/io";
 import { usePicasso } from "../../../hooks/usePicasso";
-// import { usePaginator } from 'chakra-paginator';
-// import { handlePaginate } from "../../../utils/handlePaginate";
+import { handlePaginate } from "../../../utils/handlePaginate";
+import { usePaginator } from "chakra-paginator";
+
+interface ICreateCliente {
+    id?: number;
+    nome?: string;
+    data_nascimento: string;
+    cpf_cnpj?: string;
+    rg?: string;
+    endereco?: string;
+}
 
 export default function ListCliente() {
-
+    
+    const [filtro, setFiltro] = useState<string>('Nome crescente');
     const [cliente, setCliente] = useState([]);
+    const [clientsSliced, setClientsSliced] = useState<ICreateCliente[]>([]);
     const { token } = useAuth()
     const theme = usePicasso();
 
-	// const quantityPerPage = 10;
+	const quantityPerPage = 10;
 
-    // const { currentPage, setCurrentPage } = usePaginator({
-	// 	initialState: { currentPage: 1 },
-	// });
+    const { currentPage, setCurrentPage } = usePaginator({
+		initialState: { currentPage: 1 },
+	});
 
-    // const quantityOfPages = Math.ceil(
-	// 	2
-	// );
+    const quantityOfPages = Math.ceil(
+		cliente.length / quantityPerPage
+	);
 
-    // useMemo(() => {
-	// 	handlePaginate(cliente, quantityPerPage, currentPage, setCliente);
-	// }, [cliente, currentPage]);
+
+    useMemo(() => {
+		handlePaginate(cliente, quantityPerPage, currentPage, setClientsSliced);
+	}, [cliente, currentPage]);
 
     useEffect(() => {
-    api
-        .get("/clientes", {headers: {
-            authorization: `Bearer ${token}`
-         }})
-        .then((response: any) => setCliente(response.data))
-        .catch((err: any) => {
-        console.error("ops! ocorreu um erro" + err);
-        });
-    }, [cliente, token]);
+        if(filtro === 'Nome crescente'){
+            api
+            .get("/clientes-nome-asc", {headers: {
+                Authorization: `Bearer ${token}`
+            }})
+            .then((response: any) => setCliente(response.data))
+            .catch((err: any) => {
+            console.error("ops! ocorreu um erro" + err);
+            });
+        } else if(filtro === 'Nome decrescente' ) {
+            api
+            .get("/clientes-nome-desc", {headers: {
+                Authorization: `Bearer ${token}`
+            }})
+            .then((response: any) => setCliente(response.data))
+            .catch((err: any) => {
+            console.error("ops! ocorreu um erro" + err);
+            });
+        } else if(filtro === 'Data crescente' ) {
+            api
+            .get("/clientes-data-asc", {headers: {
+                Authorization: `Bearer ${token}`
+            }})
+            .then((response: any) => setCliente(response.data))
+            .catch((err: any) => {
+            console.error("ops! ocorreu um erro" + err);
+            });
+        } else if(filtro === 'Data decrescente' ) {
+            api
+            .get("/clientes-data-desc", {headers: {
+                Authorization: `Bearer ${token}`
+            }})
+            .then((response: any) => setCliente(response.data))
+            .catch((err: any) => {
+            console.error("ops! ocorreu um erro" + err);
+            });
+        }
+        // eslint-disable-next-line
+    }, [filtro]);
 
     return (
         <SidebarWithHeader>
@@ -63,17 +105,23 @@ export default function ListCliente() {
                         >
                             Filtro
                         </MenuButton>
-                        <MenuList>
-                            <MenuItem _hover={{ background: theme.background.filtroHoverSelected}}>Nome Crescente</MenuItem>
+                        <MenuList transition={"0.2s"}>
+                            <MenuItem bgColor={filtro === 'Nome crescente' ?  theme.background.filtroHoverSelected : 'none'}  transition={"0.2s"} onClick={() => setFiltro('Nome crescente')} _hover={{ background: theme.background.filtroHoverSelected}}>Nome Crescente</MenuItem>
+                            <MenuItem bgColor={filtro === 'Nome decrescente' ?  theme.background.filtroHoverSelected : 'none'}  transition={"0.2s"} onClick={() => setFiltro('Nome decrescente')} _hover={{ background: theme.background.filtroHoverSelected}}>Nome Decrescente</MenuItem>
+                            <MenuItem bgColor={filtro === 'Data crescente' ?  theme.background.filtroHoverSelected : 'none'}  transition={"0.2s"} onClick={() => setFiltro('Data crescente')} _hover={{ background: theme.background.filtroHoverSelected}}>Data Crescente</MenuItem>
+                            <MenuItem bgColor={filtro === 'Data decrescente' ?  theme.background.filtroHoverSelected : 'none'}  transition={"0.2s"} onClick={() => setFiltro('Data decrescente')} _hover={{ background: theme.background.filtroHoverSelected}}>Data Decrescente</MenuItem>
                         </MenuList>
                     </Menu>
                 </Flex>
             </Flex>
+            <Collapse in={!!cliente.length}>
                 <Flex pt="10" gap="4" flexWrap="wrap" justifyContent="center">
-                    {cliente.map((data: any) => 
+                    {clientsSliced.map((data: any) => 
                         <CardCliente key={data.id} id={data.id} nome={data.nome} data={formatDate(data.data_nascimento)} cpf_cnpj={data.cpf_cnpj} rg={data.rg} endereco={data.endereco} />
                     )}
+                    <Pagination quantityOfPages={quantityOfPages} currentPage={currentPage} setCurrentPage={setCurrentPage} />
                 </Flex>
+            </Collapse>
         </SidebarWithHeader>
     )
 }

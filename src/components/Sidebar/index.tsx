@@ -43,7 +43,7 @@ import {
 } from 'react-icons/bs';
 import { IconType } from 'react-icons';
 import { ReactText } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useUserLogged } from '../../hooks/useUserLogged';
 import { useAuth } from '../../hooks/useAuth';
 import { MdNightlightRound } from 'react-icons/md';
@@ -138,6 +138,7 @@ interface NavItemProps extends FlexProps {
 }
 const NavItem = ({ icon, link, children, ...rest }: NavItemProps) => {
   const theme = usePicasso()
+  const {pathname} = useLocation()
 
   return (
     <Link to={link} style={{ textDecoration: 'none' }}>
@@ -145,9 +146,12 @@ const NavItem = ({ icon, link, children, ...rest }: NavItemProps) => {
         align="center"
         p="4"
         mx="4"
+        colo
         borderRadius="lg"
         role="group"
         cursor="pointer"
+        transition="0.3s"
+        color={theme.colors.blackWhite}
         _hover={{
           bg: theme.background.navItem,
           color: 'white'

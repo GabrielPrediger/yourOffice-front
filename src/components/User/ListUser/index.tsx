@@ -1,32 +1,79 @@
-import { Button, Checkbox, Flex, Image, Menu, MenuButton, MenuItem, MenuList, Stack, Text, useDisclosure } from "@chakra-ui/react";
+import { Button, Checkbox, Collapse, Flex, Image, Menu, MenuButton, MenuItem, MenuList, Slide, SlideFade, Stack, Text, useDisclosure } from "@chakra-ui/react";
 import { FiArrowLeft } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import SidebarWithHeader from "../../Sidebar";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import api from "../../../services/api";
 import { CardUser } from "../CardUser";
 import { useAuth } from "../../../hooks/useAuth";
 import { IoIosArrowDown } from 'react-icons/io'
 import { usePicasso } from "../../../hooks/usePicasso";
+import { handlePaginate } from "../../../utils/handlePaginate";
+import { usePaginator } from "chakra-paginator";
+import { Pagination } from "../../Pagination";
+import { ICreateUser } from "../../../Types/CrudTypes";
 
 export default function ListUser() {
 
-    const { isOpen, onOpen, onClose } = useDisclosure()
-
-    const [ user, setUser] = useState([]);
+    const [filtro, setFiltro] = useState<string>('Nome crescente');
+    const [ user, setUser] = useState<ICreateUser[]>([]);
     const { token } = useAuth()
     const theme = usePicasso();
+    const [userSliced, setUserSliced] = useState<ICreateUser[]>([]);
+	const [filters, setFilters] = useState<string[]>([]);
+
+    const quantityPerPage = 8;
+
+    const { currentPage, setCurrentPage } = usePaginator({
+		initialState: { currentPage: 1 },
+	});
+
+    const quantityOfPages = Math.ceil(
+		user.length / quantityPerPage
+	);
+
+
+    useMemo(() => {
+		handlePaginate(user, quantityPerPage, currentPage, setUserSliced);
+	}, [user, currentPage]);
 
     useEffect(() => {
-    api
-        .get("/get-user", {headers: {
-            Authorization: `Bearer ${token}`
-         }})
-        .then((response: any) => setUser(response.data))
-        .catch((err: any) => {
-        console.error("ops! ocorreu um erro" + err);
-        });
-    }, [token, user]);
+        if(filtro === 'Nome crescente'){
+            api
+            .get("/get-user-asc", {headers: {
+                Authorization: `Bearer ${token}`
+            }})
+            .then((response: any) => setUser(response.data))
+            .catch((err: any) => {
+            console.error("ops! ocorreu um erro" + err);
+            });
+        } else if(filtro === 'Nome decrescente' ) {
+            api
+            .get("/get-user-desc", {headers: {
+                Authorization: `Bearer ${token}`
+            }})
+            .then((response: any) => setUser(response.data))
+            .catch((err: any) => {
+            console.error("ops! ocorreu um erro" + err);
+            });
+        }
+        // eslint-disable-next-line
+    }, [filtro]);
+
+    const handleCheckbox = (value: string) => {
+		const isFiltering = filters.includes(value);
+		if (isFiltering) {
+			setFilters([...filters.filter((item) => item !== value)]);
+		} else {
+			setFilters([...filters, value]);
+		}
+	};
+
+    const filteredArr = useMemo(
+		() =>
+            user?.filter((item) => filters.includes(item.permissao)),
+		[filters, user]
+	);
 
     
     return (
@@ -48,31 +95,34 @@ export default function ListUser() {
                         >
                             Filtro
                         </MenuButton>
-                        <MenuList>
-                            <MenuItem _hover={{ background: theme.background.filtroHoverSelected}}>Crescente</MenuItem>
-                            <MenuItem _hover={{ background: theme.background.filtroHoverSelected}}>Decrescente</MenuItem>
+                        <MenuList transition={"0.2s"}>
+                            <MenuItem bgColor={filtro === 'Nome crescente' ?  theme.background.filtroHoverSelected : 'none'}  transition={"0.2s"} onClick={() => setFiltro('Nome crescente')}  _hover={{ background: theme.background.filtroHoverSelected}}>Nome Crescente</MenuItem>
+                            <MenuItem bgColor={filtro === 'Nome decrescente' ?  theme.background.filtroHoverSelected : 'none'}  transition={"0.2s"} onClick={() => setFiltro('Nome decrescente')}  _hover={{ background: theme.background.filtroHoverSelected}}>Nome Decrescente</MenuItem>
                         </MenuList>
                     </Menu>
                 </Flex>
                 <Flex justifyContent="flex-end" pr="10rem">
                     <Stack spacing={5} direction='row'>
-                        <Checkbox colorScheme='orange'>
+                        <Checkbox colorScheme='orange' value="admin" onChange={() => handleCheckbox('admin')}>
                             Admin
                         </Checkbox>
-                        <Checkbox colorScheme='orange'>
+                        <Checkbox colorScheme='orange' value="gerente" onChange={() => handleCheckbox('gerente')}>
                             Gerente
                         </Checkbox>
-                        <Checkbox colorScheme='orange'>
+                        <Checkbox colorScheme='orange' value="usuario" onChange={() => handleCheckbox('usuario')}>
                             Usuario
                         </Checkbox>
                     </Stack>
                 </Flex>
             </Flex>
-            <Flex w="90%" pt="10" gap="4" flexWrap="wrap" justifyContent="center">
-                {user?.map((data: any) => 
-                    <CardUser id={data.id} usuario={data.usuario} senha={data.senha} email={data.email} permissao={data.permissao} />
-                )}
-            </Flex>
+            <Collapse in={!!user.length}>
+                <Flex w="90%" pt="10" gap="4" flexWrap="wrap" justifyContent="center">
+                    {((filters.length ? filteredArr : userSliced) || []).map((data: any) => 
+                        <CardUser id={data.id} usuario={data.usuario} senha={data.senha} email={data.email} permissao={data.permissao} />
+                    )}
+                    <Pagination quantityOfPages={quantityOfPages} currentPage={currentPage} setCurrentPage={setCurrentPage} />
+                </Flex>
+            </Collapse>
         </SidebarWithHeader>
     )
 }
