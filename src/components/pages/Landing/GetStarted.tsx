@@ -7,9 +7,14 @@ import {
     Button,
     Icon,
     IconProps,
+    Image,
   } from '@chakra-ui/react';
+import { usePicasso } from '../../../hooks/usePicasso';
   
   export default function GetStarted() {
+
+    const theme = usePicasso();
+
     return (
       <Container maxW={'5xl'} mt="10">
         <Stack
@@ -22,7 +27,7 @@ import {
             fontSize={{ base: '3xl', sm: '4xl', md: '6xl' }}
             lineHeight={'110%'}>
              Cuidar da sua empresa de um jeito {'  '}
-            <Text fontWeight={600} as={'span'} color={'#dfbda1'}>
+            <Text fontWeight={600} as={'span'} color={theme.colors.brownWhite}>
               FÁCIL
             </Text>
           </Heading>
@@ -33,22 +38,20 @@ import {
           </Text>
           <Stack spacing={6} direction={'row'}>
             <Button
+              color={'white'}
               rounded={'full'}
               px={6}
               colorScheme={'orange'}
-              bg={'#dfbda1'}
-              _hover={{ bg: '#e2d1c3' }}>
+              bg={theme.background.editButton}
+              _hover={{ opacity: '0.8' }}>
               Começe já!
             </Button>
             <Button rounded={'full'} px={6}>
               Sobre nós
             </Button>
           </Stack>
-          <Flex w={'full'}>
-            <Illustration
-              height={{ sm: '24rem', lg: '28rem' }}
-              mt={{ base: 12, sm: 16 }}
-            />
+          <Flex justifyContent="center" w={'full'}>
+            <Image src={theme.images.landingGetStarted} />
           </Flex>
         </Stack>
       </Container>

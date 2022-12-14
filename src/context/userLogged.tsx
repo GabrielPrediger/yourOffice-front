@@ -9,17 +9,16 @@ export const UserLoggedProvider: React.FC<{ children: React.ReactNode }> = ({
 
 	const [logged, setLogged] = useState<string | null>()
 	const [disconnect, setDisconnect] = useState<boolean>(false)
-	const { removeLocalStorage, setToken, timer } = useAuth()
+	const { removeLocalStorage, setToken, token } = useAuth()
 
 	useEffect(() => {	  
 		setLogged(logged)
+		console.log(logged, 'logged')
+
         if(logged){
             localStorage.setItem('Username', logged)
         }
-		console.log(logged, 'logged')
-		console.log(disconnect, 'disconnect')
-
-	}, [logged, disconnect])
+	}, [logged])
 
 	const handleDisconnect = useCallback(() => {
 		console.log('ENTROU NO handleDisconnect');

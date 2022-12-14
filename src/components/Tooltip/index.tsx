@@ -24,7 +24,7 @@ const useToasty = () => {
 				return "#E53E3E";
 
 			case "warning":
-				return "yellow";
+				return "#ee8814";
 
 			case "info":
 				return "#2B6CB0";
@@ -106,7 +106,7 @@ const useToasty = () => {
 						{toastIcon}
 						<Flex flexDirection="column" ml="0.8rem">
 							<Text fontWeight={"semibold"}>{`${state?.title}`}</Text>
-							<Text fontSize="sm" font-weight="normal">
+							<Text fontSize="sm" fontWeight="normal">
 								{state.description}
 							</Text>
 						</Flex>

@@ -12,6 +12,7 @@ import { IoIosArrowDown } from "react-icons/io";
 import { usePicasso } from "../../../hooks/usePicasso";
 import { handlePaginate } from "../../../utils/handlePaginate";
 import { usePaginator } from "chakra-paginator";
+import { ColorRing } from "react-loader-spinner";
 
 interface ICreateCliente {
     id?: number;
@@ -84,7 +85,7 @@ export default function ListCliente() {
             });
         }
         // eslint-disable-next-line
-    }, [filtro]);
+    }, [filtro, cliente]);
 
     return (
         <SidebarWithHeader>
@@ -94,7 +95,7 @@ export default function ListCliente() {
                     <Text w="max-content">Voltar</Text>
                 </Flex>
             </Link>
-            <Flex justifyContent="space-between" px="7rem" pt="10">
+            <Flex justifyContent={["center","center","space-between","space-between"]} px="7rem" pt="10">
                 <Flex>
                     <Menu>
                         <MenuButton 
@@ -114,6 +115,17 @@ export default function ListCliente() {
                     </Menu>
                 </Flex>
             </Flex>
+            <Flex justifyContent="center" pt={!filtro.length && !clientsSliced.length ? "15rem" : "unset"}>
+                    <ColorRing
+                        height="80"
+                        width="80"
+                        ariaLabel="blocks-loading"
+                        wrapperStyle={{}}
+                        wrapperClass="blocks-wrapper"
+                        colors={['#f3c48e', '#f1b877', '#f0a653', '#f1dac0', '#a1773f']}
+                        visible={!filtro.length && !clientsSliced.length ? true : false}
+                    />
+                </Flex>
             <Collapse in={!!cliente.length}>
                 <Flex pt="10" gap="4" flexWrap="wrap" justifyContent="center">
                     {clientsSliced.map((data: any) => 

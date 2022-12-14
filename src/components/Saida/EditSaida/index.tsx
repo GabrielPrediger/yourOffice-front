@@ -6,6 +6,7 @@ import { Link, useParams } from "react-router-dom";
 import { useAuth } from "../../../hooks/useAuth";
 import { usePicasso } from "../../../hooks/usePicasso";
 import api from "../../../services/api";
+import { formatDate } from "../../../utils/formatDate";
 import SidebarWithHeader from "../../Sidebar";
 import { useToasty } from "../../Tooltip";
 
@@ -72,14 +73,17 @@ export default function EditarSaidaComponent() {
                     <form onSubmit={handleSubmit(onEditForm)}>
                         <Flex flexDirection="column" gap="2" py="2">
                             <Text>Valor</Text>
-                            <Input w="25rem" h="max" py="2" size={"lg"} type="number" defaultValue={editSaida?.valor} {...register("valor")} />
+                            <Input w="25rem" h="max" py="2" size={"lg"} defaultValue={editSaida?.valor} {...register("valor")} />
                         </Flex>
                         <Flex flexDirection="column" gap="2" py="2">
                             <Text>Descrição</Text>
                             <Input w="25rem" h="max" py="2" size={"lg"} type="text" defaultValue={editSaida?.descricao} {...register("descricao")} />
                         </Flex>
                         <Flex flexDirection="column" gap="2" py="2">
-                            <Text>Data</Text>
+                            <Flex gap="2">
+                                <Text>Data</Text>
+                                <Text fontSize={"md"} fontWeight={500}>{formatDate(editSaida?.data)}</Text>
+                            </Flex>
                             <Input w="25rem" h="max" py="2" size={"lg"} type="date" defaultValue={editSaida?.data} {...register("data")} />
                         </Flex>
                         <Button 

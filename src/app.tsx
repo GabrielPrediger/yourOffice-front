@@ -24,7 +24,7 @@ const App: React.FC = () => {
                     <Route key={index} path={`/${route.path}`} element={route.element} />
                   )
                 }
-                {/* <Route path={`*`} element={<PageNotFound />} /> */}
+                <Route path={`*`} element={<PageNotFound />} />
 
             </Routes>
         </BrowserRouter>

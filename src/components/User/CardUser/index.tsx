@@ -46,14 +46,10 @@ export const CardUser: React.FC<IUser> = props => {
                 </Flex>
             </Flex>
             <Flex gap="8" pt="4">
-                {logged === "admin" && (
-                    <>
-                    <Link to={`/editar-usuario/${id}`}>
-                        <Button py="1" w="max" h="max" color='white' bgColor={theme.background.editButton} border="1px solid" borderColor={theme.border.editButton} borderRadius="2xl">Editar</Button>
-                    </Link>
-                    <Button onClick={onOpen} py="1" w="max" h="max" color={theme.colors.brownWhite} bgColor={theme.background.deleteButton} border="1px solid" borderColor={theme.border.deleteButton} borderRadius="2xl">Deletar</Button>
-                    </>
-                    )}
+                <Link to={`/editar-usuario/${id}`}>
+                    <Button py="1" w="max" h="max" color='white' bgColor={theme.background.editButton} border="1px solid" borderColor={theme.border.editButton} borderRadius="2xl">Editar</Button>
+                </Link>
+                <Button onClick={onOpen} py="1" w="max" h="max" color={theme.colors.brownWhite} bgColor={theme.background.deleteButton} border="1px solid" borderColor={theme.border.deleteButton} borderRadius="2xl">Deletar</Button>
             </Flex>
         </Flex>
     )

@@ -3,45 +3,67 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { BsCartPlus } from "react-icons/bs";
 import { FiArrowLeft } from "react-icons/fi";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../../hooks/useAuth";
 import { usePicasso } from "../../../hooks/usePicasso";
 import api from "../../../services/api";
-import { ICreateCliente, ICreateEntrada, ICreateProduct } from "../../../Types/CrudTypes";
+import { ICreateCliente, ICreateEntrada, ICreateProduct, } from "../../../Types/CrudTypes";
+import { IProductsIdAndQuantity, IEntradaProducts} from '../../../Types/index'
 import SidebarWithHeader from "../../Sidebar";
+import { useToasty } from "../../Tooltip";
 import { AddProdutosModal } from "../AddProdutosModal";
-
-interface IEntradaProdutos {
-    id: number;
-    quantidade: number;
-}
 
 export default function CreateEntradaComponent() {
 
-    const { isOpen, onOpen, onClose } = useDisclosure()
-    const theme = usePicasso();
+
     const [isAluguel, setIsAluguel] = useState<boolean>()
     const [isVenda, setIsVenda] = useState<boolean>()
-    const [selectedpProdutos, setSelectedProdutos] = useState<IEntradaProdutos[]>([]);
+    const [selectedProdutos, setSelectedProdutos] = useState<IProductsIdAndQuantity[]>([]);
     const [clientes, setClientes] = useState<ICreateCliente[]>();
-    const [valorTotal, setValorTotal] = useState();
-    const { register, handleSubmit, formState: { errors } } = useForm();
+    const [valorTotal, setValorTotal] = useState<number>();
+
+    const { register, handleSubmit, reset, formState: {isSubmitSuccessful} } = useForm();
     const { token } = useAuth()
+    const { toast } = useToasty();
+    const { isOpen, onOpen, onClose } = useDisclosure()
+    const theme = usePicasso();
 
     const onSubmitForm = (data: any) => {
-        console.log(data, 'data');
-
-        const request = { tipoVenda: data.tipoVenda, data: data.data, descricao: data.descricao, valor: data.valor, clienteId: Number(data.clienteId), produtos: selectedpProdutos, data_inicio_aluguel: data?.data_inicio_aluguel, data_fim_aluguel: data?.data_fim_aluguel}
-        console.log(request, 'request');
+        const request = { 
+            tipoVenda: data.tipoVenda, 
+            data: data.data, 
+            descricao: data.descricao, 
+            valor: data.valor, 
+            clienteId: Number(data.clienteId), 
+            produtos: selectedProdutos, 
+            data_inicio_aluguel: data?.data_inicio_aluguel, 
+            data_fim_aluguel: data?.data_fim_aluguel
+        }
         api
             .post("/create-entrada", request, {headers: {
                 Authorization: `Bearer ${token}`
             }})
-            .then((response: any) => console.log(response))
+            .then((response: any) => {console.log(response, "Foi"); setToastSuc();})
             .catch((err: any) => {
                 console.error("ops! ocorreu um erro" + err);
+                setToastErr();
             });
     }
+
+    useEffect(() => {
+        if(isSubmitSuccessful){
+            reset({ 
+                tipoVenda: '', 
+                data: '',
+                descricao: '', 
+                valor: '', 
+                clienteId: '', 
+                produtos: '', 
+                data_inicio_aluguel: '',
+                data_fim_aluguel: ''
+            })
+        }
+    }, [isSubmitSuccessful, reset])
         
     useEffect(() => {
         api
@@ -54,11 +76,34 @@ export default function CreateEntradaComponent() {
             });
         }, [token]);
 
-        console.log(selectedpProdutos, 'aaaaaaaaaa')
+    const setToastSuc = () => {
+        toast({
+            id: "toastEntradaCreateSuc",
+            position: "top-right",
+            status: "success",
+            title: "Entrada criada!",
+            description: "Entrada criada com sucesso!",
+        });
+    }
+
+    const setToastErr = () => {
+        toast({
+            id: "toastEntradaCreateError",
+            position: "top-right",
+            status: "error",
+            title: "Dados ja existentes!",
+            description: "Revise as informações informada!",
+        });
+    }
 
     return (
         <SidebarWithHeader>
-            <AddProdutosModal isOpen={isOpen} onClose={onClose} produtos={setSelectedProdutos} valorTotalDoCarrinho={setValorTotal} />
+            <AddProdutosModal 
+                isOpen={isOpen} 
+                onClose={onClose} 
+                getProdutos={setSelectedProdutos} 
+                valorTotalDoCarrinho={setValorTotal} 
+            />
             <Flex justifyContent="center" alignItems="center">
                 <Flex flexDirection="column" gap="10" p="10">
                     <Link to="/entradas" style={{ width: "max-content" }}>
@@ -86,11 +131,12 @@ export default function CreateEntradaComponent() {
                             <Text>Produtos</Text>
                             <Button onClick={onOpen}>Adicionar<Image as={BsCartPlus} size="20px" ml="2" /></Button>                         
                         </Flex>
-                        <Collapse in={!!selectedpProdutos.length}>
+                        <Collapse in={!!selectedProdutos.length}>
                             <Flex flexDirection="column" gap="2" pb="5">
                                 <Text>Valor</Text>
                                 <Input placeholder={`Insira um valor...`} id="valor" w="25rem" h="max" py="2" size={"lg"} {...register("valor", { required: true})} />
-                                <Text fontSize={"sm"}>Valor total do carrinho: R$ {valorTotal}</Text>
+                                <Text fontSize={"sm"}>Valor total do carrinho: R$ {valorTotal?.toFixed(2)}</Text>
+                                
                             </Flex>
                         </Collapse>
                         <Flex flexDirection="column" gap="2" pb="5">

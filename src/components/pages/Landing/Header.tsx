@@ -46,7 +46,7 @@ export default function Header() {
 
   return (
     <>
-      <Box boxShadow={theme.boxShadow.header} w="100vw" zIndex="999" bg={useColorModeValue('linear-gradient(135deg, #fdfcfb 0%, #e2d1c3 100%)', 'gray.900')} px={8} position="fixed">
+      <Box boxShadow={theme.boxShadow.header} w="100vw" zIndex="999" bg={theme.background.loginButton} px={8} position="fixed">
         <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
           <Flex gap="5">
             <Text fontSize="2xl" fontFamily="monospace" fontWeight="bold">yourOffice</Text>
@@ -59,10 +59,10 @@ export default function Header() {
               </Button>
 
               <Button 
-                bg={'#dfbda1'}
+                bg={theme.background.criarButton}
                 color={'white'}
+                transition="0.5s"
                 _hover={{
-                    bg: '#e2d1c3',
                     opacity: 0.5
                 }} onClick={() => navigate('/entrar')}>
                 Log in

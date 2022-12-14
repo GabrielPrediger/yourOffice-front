@@ -53,7 +53,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 					return;   			
 				}
 				clearTimeout(timer);
-			}, 20000)
+			}, 2000000)
 		
 	}, [disconnect, logged, refreshToken?.expiresIn, refreshToken?.id, token])
 

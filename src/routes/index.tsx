@@ -4,6 +4,7 @@ import ListCliente from '../components/Cliente/ListCliente'
 import CreateEntradaComponent from '../components/Entrada/CreateEntrada'
 import EditarEntradaComponent from '../components/Entrada/EditEntrada'
 import ListEntrada from '../components/Entrada/ListEntrada'
+import { ChartComponent } from '../components/pages/Chart'
 import { ClientePage } from '../components/pages/Cliente'
 import { EntradaPage } from '../components/pages/Entrada'
 import { Landing } from '../components/pages/Landing'
@@ -28,6 +29,10 @@ export const authRoutes: IRoute[] = [
     {
         path: '/inicio',
         element: <MainMenuComponent />
+    },
+    {
+        path: '/charts',
+        element: <ChartComponent />
     },
     {
         path: '/usuarios',
@@ -86,7 +91,7 @@ export const authRoutes: IRoute[] = [
         element: <CreateEntradaComponent />
     },
     {
-        path: '/editar-entrada',
+        path: '/editar-entrada/:id',
         element: <EditarEntradaComponent />
     },
     {

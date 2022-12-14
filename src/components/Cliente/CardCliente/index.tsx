@@ -35,7 +35,7 @@ export const CardCliente: React.FC<IUser> = props => {
                     <Text color={'gray.500'} fontSize={'sm'}>{data}</Text>
                 </Flex>
                 <Flex gap="2" justifyContent="space-between" flexWrap="wrap">
-                    <Text fontWeight={500} fontSize={'sm'} textTransform="uppercase">Cpf/Cnpj:</Text>
+                    <Text fontWeight={500} fontSize={'sm'} textTransform="uppercase">Cpf:</Text>
                     <Text color={'gray.500'} fontSize={'sm'}>{cpf_cnpj}</Text>
                 </Flex>
                 <Flex gap="2" justifyContent="space-between" flexWrap="wrap">

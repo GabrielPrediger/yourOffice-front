@@ -1,20 +1,22 @@
 import { Button, Flex, Image, Input, Text } from "@chakra-ui/react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { FiArrowLeft } from "react-icons/fi";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../../hooks/useAuth";
 import { usePicasso } from "../../../hooks/usePicasso";
 import api from "../../../services/api";
 import SidebarWithHeader from "../../Sidebar";
 import { useToasty } from "../../Tooltip";
-import { useCallback } from 'react'
+import { useCallback, useEffect } from 'react'
+import InputMask from "react-input-mask";
 
 export default function CreateClienteComponent() {
 
     const theme = usePicasso();
     const { toast } = useToasty();
-    const { register, handleSubmit } = useForm();
+    const { register, handleSubmit, control, reset, formState: {isSubmitSuccessful} } = useForm();
     const { token } = useAuth()
+    const navigate = useNavigate()
 
     const onSubmitForm = (data: any) => {
         api
@@ -26,6 +28,12 @@ export default function CreateClienteComponent() {
         console.error("ops! ocorreu um erro" + setToast(err));
         });
     }
+
+    useEffect(() => {
+        if(isSubmitSuccessful){
+            reset({ nome: "", data_nascimento: "", cpf_cnpj: "", permissao: "", rg: "", endereco: ""})
+        }
+    }, [isSubmitSuccessful, reset])
 
     const setToast = useCallback((status: any) => {
         if(status === 201){
@@ -64,15 +72,22 @@ export default function CreateClienteComponent() {
                         </Flex>
                         <Flex flexDirection="column" gap="2" pb="4">
                             <Text>Data de nascimento</Text>
-                            <Input w="25rem" h="max" py="2" size={"lg"} type="date" {...register("data_nascimento", { required: true })} />
+                            <Input w="25rem" h="max" py="2" size={"lg"} type="date" {...register("data_nascimento", { required: true })} />                          
                         </Flex>
                         <Flex flexDirection="column" gap="2" pb="4">
-                            <Text>CPF/CNPJ</Text>
-                            <Input placeholder="Digite aqui um cpf/cnpj..." _placeholder={{ color: "#A0AEC0"}} w="25rem" h="max" py="2" size={"lg"} {...register("cpf_cnpj", { required: true })} />
+                            <Text>CPF</Text>
+                            <Controller
+                                control={control}                            
+                                name="cpf/cnpj"
+                                render={({ onChange, value }: any) => (
+                                    <InputMask  {...register("cpf_cnpj", { required: true })} style={{ fontSize:"1.15rem", padding: '0.7rem 1rem', border: '1px solid', borderRadius: "6px", borderColor: theme.border.inputDefault}} mask="999.999.999-99" value={value} onChange={onChange}>
+                                    </InputMask>
+                                )}                       
+                            />
                         </Flex>
                         <Flex flexDirection="column" gap="2" pb="4">
                             <Text>RG</Text>
-                            <Input placeholder="Digite aqui um rg..." _placeholder={{ color: "#A0AEC0"}} w="25rem" h="max" py="2" size={"lg"} {...register("rg", { required: true })} />
+                            <Input type="number" placeholder="Digite aqui um rg..." _placeholder={{ color: "#A0AEC0"}} w="25rem" h="max" py="2" size={"lg"} {...register("rg", { required: true })} />
                         </Flex>
                         <Flex flexDirection="column" gap="2" pb="4">
                             <Text>Endereço</Text>

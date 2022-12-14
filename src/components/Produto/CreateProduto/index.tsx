@@ -1,12 +1,13 @@
 import { Button, Flex, Image, Input, Select, Stack, Text } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import { FiArrowLeft } from "react-icons/fi";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../../hooks/useAuth";
 import { usePicasso } from "../../../hooks/usePicasso";
 import api from "../../../services/api";
 import SidebarWithHeader from "../../Sidebar";
 import { useToasty } from "../../Tooltip";
+import { useEffect } from 'react'
 
 interface IProduct {
     id?: number;
@@ -20,7 +21,7 @@ interface IProduct {
 
 export default function CreateProdutoComponent() {
 
-    const { register, handleSubmit } = useForm();
+    const { register, handleSubmit, reset, formState: {isSubmitSuccessful} } = useForm();
     const { toast } = useToasty();
     const { token } = useAuth()
     const theme = usePicasso();
@@ -46,6 +47,12 @@ export default function CreateProdutoComponent() {
                 console.error("ops! ocorreu um erro" + setToast(err));
             });
     }
+
+    useEffect(() => {
+        if(isSubmitSuccessful){
+            reset({ nome: "", descricao: "", quantidade: "", tipo: "", foto: "", preco: ""})
+        }
+    }, [isSubmitSuccessful, reset])
 
     const setToast = (status: any) => {
         console.log(status)

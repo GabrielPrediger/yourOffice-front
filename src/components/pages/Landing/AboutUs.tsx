@@ -16,6 +16,7 @@ import {
     IoSearchSharp,
   } from 'react-icons/io5';
   import { ReactElement } from 'react';
+import { usePicasso } from '../../../hooks/usePicasso';
   
   interface FeatureProps {
     text: string;
@@ -41,6 +42,9 @@ import {
   };
   
   export default function AboutUs() {
+
+    const theme = usePicasso()
+
     return (
       <Container maxW={'5xl'} py='10rem' mb={24}>
         <SimpleGrid columns={{ base: 1, md: 2 }} spacing={10}>
@@ -93,9 +97,7 @@ import {
             <Image
               rounded={'md'}
               alt={'feature image'}
-              src={
-                'https://images.unsplash.com/photo-1554200876-56c2f25224fa?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80'
-              }
+              src={theme.images.landingAboutUs}
               objectFit={'cover'}
             />
           </Flex>

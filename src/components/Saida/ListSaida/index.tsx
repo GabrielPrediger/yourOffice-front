@@ -21,7 +21,7 @@ export default function ListSaida() {
 
     const [saida, setSaida] = useState<ISaidas[]>([]);
     const [saidaSliced, setSaidaSliced] = useState<ICreateSaidas[]>([]);
-    const [filtro, setFiltro] = useState<string>('Data crescente');
+    const [filtro, setFiltro] = useState<string>('Data decrescente');
 
     const quantityPerPage = 8;
 
@@ -77,7 +77,7 @@ export default function ListSaida() {
             });
         }
 
-    }, [filtro, token]);
+    }, [filtro, token, saidaSliced]);
 
     return (
         <SidebarWithHeader>
@@ -87,7 +87,7 @@ export default function ListSaida() {
                     <Text w="max-content">Voltar</Text>
                 </Flex>
             </Link>
-            <Flex justifyContent="space-between" px="7rem" pt="10">
+            <Flex justifyContent={["center","center","space-between","space-between"]} px="7rem" pt="10">
                 <Flex>
                     <Menu>
                         <MenuButton 

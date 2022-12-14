@@ -7,6 +7,7 @@ import { useForm } from "react-hook-form";
 import api from "../../../services/api";
 import { useToasty } from "../../Tooltip";
 import { useAuth } from "../../../hooks/useAuth";
+import { usePicasso } from "../../../hooks/usePicasso";
 
 interface IProduct {
     id?: number;
@@ -24,7 +25,7 @@ const select_options = [{id: 1, value: 'Aluguel'}, {id: 2, value: 'Venda'}]
 export default function EditarProdutoComponent() {
 
     const { toast } = useToasty();
-
+    const theme = usePicasso();
     const [editProduto, setEditProduto] = useState<IProduct>();
     const { id } = useParams();
     const { register, handleSubmit, reset } = useForm({defaultValues: editProduto });
@@ -33,10 +34,9 @@ export default function EditarProdutoComponent() {
     function convertImageToBase64(file: File) {
         return new Promise((resolve, reject) => {
             const fileReader = new FileReader();
+            console.log(file, 'fle')
             fileReader.readAsDataURL(file)
-
             fileReader.onload = () => resolve(fileReader.result)
-            setToast(2);
             fileReader.onerror = (err) => { reject(err); }
             
         })

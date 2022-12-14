@@ -19,21 +19,31 @@ export const DeleteProdutoModalComponent: React.FC<IModal> = props => {
         .delete(`/delete-produto/${Number(id)}`, {headers: {
             Authorization: `Bearer ${token}`
          }})
-        .then((response) => console.log('Produto deletado!'),)
+        .then((response) => {console.log('Produto deletado!'); setToastSuc()
+    },)
         .catch((err) => {
-        console.error("ops! ocorreu um erro" + err);
+        console.error("ops! ocorreu um erro" + setToastError());
         });
-        setToast()
         onClose()
     }
 
-    const setToast = () => {
+    const setToastSuc = () => {
         toast({
             id: "toastDeleteProduto",
             position: "top-right",
             status: "success",
             title: "Dados deletados!",
             description: "Produto deletado com sucesso!",
+        });
+    }
+
+    const setToastError = () => {
+        toast({
+            id: "toastDeleteProduto",
+            position: "top-right",
+            status: "error",
+            title: "Impossivel deletar!",
+            description: "Produto está registrado em uma venda",
         });
     }
 

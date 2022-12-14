@@ -6,6 +6,7 @@ import './styles/scrollbar.css'
 import App from './app';
 import { AuthProvider } from './context/auth';
 import { UserLoggedProvider } from './context/userLogged';
+import { UserPermitionProvider } from './context/userPermition';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -13,12 +14,14 @@ const root = ReactDOM.createRoot(
 
 root.render(
   <AuthProvider>
-    <UserLoggedProvider>
-      <ChakraProvider>
-        <App />
-        <ColorModeScript />
-      </ChakraProvider>
-    </UserLoggedProvider>
+    <UserPermitionProvider>
+      <UserLoggedProvider>
+        <ChakraProvider>
+          <App />
+          <ColorModeScript />
+        </ChakraProvider>
+      </UserLoggedProvider>
+    </UserPermitionProvider>
   </AuthProvider>
 );
 

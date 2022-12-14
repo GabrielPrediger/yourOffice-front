@@ -39,6 +39,7 @@ export interface ICreateEntrada {
     produtos: [];
     data_inicio_aluguel?: number; 
     data_fim_aluguel?: number;
+    isAtrasado?: boolean;
 }
 
 export interface ICreateCliente {

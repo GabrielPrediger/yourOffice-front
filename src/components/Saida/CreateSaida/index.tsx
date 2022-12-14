@@ -1,7 +1,8 @@
 import { Button, Flex, Image, Input, Select, Stack, Text } from "@chakra-ui/react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { FiArrowLeft } from "react-icons/fi";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../../hooks/useAuth";
 import { usePicasso } from "../../../hooks/usePicasso";
 import api from "../../../services/api";
@@ -13,7 +14,7 @@ export default function CreateSaidaComponent() {
     const theme = usePicasso();
     const { token } = useAuth()
 
-    const { register, handleSubmit } = useForm();
+    const { register, handleSubmit, reset, formState: {isSubmitSuccessful} } = useForm();
     const { toast } = useToasty();
 
     const onSubmitForm = (data: any) => {
@@ -21,12 +22,19 @@ export default function CreateSaidaComponent() {
             .post("/create-saida", { valor: data.valor, data: data.data, descricao: data.descricao }, {headers: {
                 Authorization: `Bearer ${token}`
              }})
-             .then((response: any) => {console.log(response); setToast(response.status)})
+             .then((response: any) => {console.log(response); setToast(response.status);})
              .catch((err: any) => {
                 console.error("ops! ocorreu um erro" + err);
                 setToast(err)
             });
     }
+
+    useEffect(() => {
+        if(isSubmitSuccessful){
+            reset({ valor: "", descricao: "", data: ""})
+        }
+    }, [isSubmitSuccessful, reset])
+    
 
     const setToast = (status: any) => {
         if(status === 201){

@@ -13,17 +13,20 @@ import { Pagination } from "../../Pagination";
 import { handlePaginate } from "../../../utils/handlePaginate";
 import { usePaginator } from "chakra-paginator";
 import { IoIosArrowDown } from "react-icons/io";
+import { TailSpin, ColorRing } from "react-loader-spinner";
+import { IEntradaProducts } from "../../../Types";
 
 export default function ListEntrada() {
 
     const [filtro, setFiltro] = useState<string>('Data crescente');
     const { token } = useAuth()
     const theme = usePicasso();
-    const [ entradas, setEntradas] = useState([]);
-    const [entradasSliced, setEntradasSliced] = useState<ICreateEntrada[]>([]);
+    const [ entradas, setEntradas] = useState<IEntradaProducts[]>([]);
+    const [entradasSliced, setEntradasSliced] = useState<IEntradaProducts[]>([]);
 	const [filters, setFilters] = useState<string[]>([]);
     const [qTipo, setQTipo] = useState<string>();
-
+    const [isDeleting, setIsDeleting] = useState<boolean>(false);
+    const [isAtrasadoArray, setIsAtrasadoArray] = useState<boolean>();
     const quantityPerPage = 8;
 
     const { currentPage, setCurrentPage } = usePaginator({
@@ -39,7 +42,7 @@ export default function ListEntrada() {
 		handlePaginate(entradas, quantityPerPage, currentPage, setEntradasSliced);
 	}, [entradas, currentPage]);
 
-    useEffect(() => {
+    useMemo(() => {
         if(filtro === 'Data crescente'){
             api
             .get("/entradas-by-dateAsc", {headers: {
@@ -112,9 +115,9 @@ export default function ListEntrada() {
             .catch((err: any) => {
             console.error("ops! ocorreu um erro" + err);
             });
-        } 
+        }
         // eslint-disable-next-line
-    }, [filtro]);
+    }, [filtro, isDeleting]);
 
     const handleCheckbox = (value: string) => {
         setQTipo(value)
@@ -130,11 +133,21 @@ export default function ListEntrada() {
         () =>
             entradasSliced?.filter((item) => filters.includes(item.tipoVenda)),
         [filters, entradasSliced]
-    );  
+    ); 
 
-    console.log(filteredArr.map((data: ICreateEntrada) => data), 'filteredArr')
-    console.log(entradasSliced.map((data: ICreateEntrada) => data), 'entradasSliced')
-
+    const filteredIsAluguel = entradas?.filter((item) => item.isAtrasado === true)
+   
+    const returnArrays = useMemo(() => {
+        if(isAtrasadoArray){
+            return filteredIsAluguel
+        }
+        if(filters.length){
+            return filteredArr
+        } else{
+            return entradasSliced
+        }
+    }, [entradasSliced, filteredArr, filteredIsAluguel, filters.length, isAtrasadoArray])
+    
     return (
         <SidebarWithHeader>
             <Link to="/entradas" style={{ width: "max-content" }}>
@@ -143,7 +156,7 @@ export default function ListEntrada() {
                     <Text w="max-content">Voltar</Text>
                 </Flex>
             </Link>
-            <Flex justifyContent="space-between" px="6rem" pt="10">
+            <Flex w="100%" justifyContent={["center","center","center","space-between"]} px={["0rem","6rem","6rem","6rem"]} gap="5" pt="10" flexWrap={"wrap"}>
                 <Menu>
                     <MenuButton 
                         as={Button} 
@@ -171,7 +184,7 @@ export default function ListEntrada() {
                         <MenuItem transition={"0.2s"} bgColor={filtro === 'Valor decrescente' ?  theme.background.filtroHoverSelected : 'none'} onClick={() => setFiltro('Valor decrescente')} _hover={{ background: theme.background.filtroHoverSelected}}>Valor decrescente</MenuItem>
                     </MenuList>
                 </Menu>
-                <Flex justifyContent="flex-end" pr="210">
+                <Flex justifyContent="flex-end">
                     <Stack spacing={5} direction='row'>
                         <Checkbox colorScheme='orange' value="venda" onChange={() => handleCheckbox('venda')}>
                             Venda
@@ -179,13 +192,40 @@ export default function ListEntrada() {
                         <Checkbox colorScheme='orange' value="aluguel" onChange={() => handleCheckbox('aluguel')}>
                             Aluguel
                         </Checkbox>
+                        <Checkbox colorScheme='orange' value="atrasado" onChange={() => {handleCheckbox('atrasado'); setIsAtrasadoArray(isAtrasadoArray ? false : true)}}>
+                            Atrasado
+                        </Checkbox>
                     </Stack>
                 </Flex>
             </Flex>
+                <Flex justifyContent="center" pt={!entradas.length && !entradasSliced.length && !filteredArr.length ? "15rem" : "unset"}>
+                    <ColorRing
+                        height="80"
+                        width="80"
+                        ariaLabel="blocks-loading"
+                        wrapperStyle={{}}
+                        wrapperClass="blocks-wrapper"
+                        colors={['#f3c48e', '#f1b877', '#f0a653', '#f1dac0', '#a1773f']}
+                        visible={!entradas.length && !entradasSliced.length && !filteredArr.length ? true : false}
+                    />
+                </Flex>
                 <Collapse in={!!entradas.length || !!entradasSliced.length || !!filteredArr.length}>
                     <Flex pt="10" gap="4" flexWrap="wrap" justifyContent="center">
-                        {((filters.length ? filteredArr : entradasSliced) || []).map((data: ICreateEntrada) =>
-                            <CardVenda id={data.id} tipoVenda={data.tipoVenda} data={formatDate(data.data)} descricao={data.descricao} valor={data.valor} clienteId={data.clienteId} produtos={data.produtos} data_inicio_aluguel={formatDate(data?.data_inicio_aluguel)} data_fim_aluguel={formatDate(data?.data_fim_aluguel)}  /> 
+                        {(returnArrays || []).map((data: IEntradaProducts) =>
+                            <CardVenda 
+                                id={data.id} 
+                                tipoVenda={data.tipoVenda} 
+                                data={data.data} 
+                                descricao={data?.descricao} 
+                                valor={data.valor} 
+                                clienteId={data.clienteId}
+                                produtos={data.produtos} 
+                                quantidade={data.quantidade}
+                                data_inicio_aluguel={data.data_inicio_aluguel} 
+                                data_fim_aluguel={data.data_fim_aluguel} 
+                                isAtrasado={data.isAtrasado}
+                                setIsDeleting={setIsDeleting}
+                            /> 
                         )}
                         <Pagination quantityOfPages={quantityOfPages} currentPage={currentPage} setCurrentPage={setCurrentPage} />
                     </Flex>

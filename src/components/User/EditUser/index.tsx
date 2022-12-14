@@ -79,7 +79,7 @@ export default function EditUserComponent() {
                         </Flex>
                         <Flex flexDirection="column" gap="2" py="2">
                             <Text>Senha</Text>
-                            <Input w="25rem" h="max" py="2" size={"lg"} type="password" defaultValue={editUser?.senha} {...register("senha")} />
+                            <Input w="25rem" h="max" py="2" size={"lg"} defaultValue='' type="password" {...register("senha")} />
                         </Flex>
                         <Flex flexDirection="column" gap="2" py="2">
                             <Text>Email</Text>
@@ -88,7 +88,7 @@ export default function EditUserComponent() {
                         <Flex flexDirection="column" gap="2" py="2">
                             <Text>Permissão</Text>
                             <Stack spacing={3}>
-                                <Select variant='outline' placeholder='Escolha uma opção...' {...register("permissao")}>
+                                <Select variant='outline' placeholder='Escolha uma opção...' defaultValue={editUser?.permissao} {...register("permissao")}>
                                     {select_options.map(options =>
                                        <option key={options.id} value={options.value} selected={options.value.toLowerCase() === editUser?.permissao} color="black">{options.value}</option>
                                     )}

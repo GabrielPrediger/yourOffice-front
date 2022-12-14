@@ -1,6 +1,6 @@
 import { Button, Flex, FormControl, Image, Input, Select, Stack, Text } from "@chakra-ui/react";
 import { FiArrowLeft } from "react-icons/fi";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { usePicasso } from "../../../hooks/usePicasso";
 import SidebarWithHeader from "../../Sidebar";
 import { useEffect, useState } from "react";
@@ -13,7 +13,7 @@ export default function CreateUserComponent() {
 
     const theme = usePicasso();
     const { toast } = useToasty();
-    const { register, handleSubmit } = useForm();
+    const { register, handleSubmit, reset, formState: {isSubmitSuccessful} } = useForm();
     const { token } = useAuth()
 
     const onSubmitForm = (data: any) => {
@@ -22,14 +22,20 @@ export default function CreateUserComponent() {
         .post("/create-user",{ usuario: data.usuario, senha: data.senha, email: data.email, permissao: data.permissao }, {headers: {
             Authorization: `Bearer ${token}`
          }})
-         .then((response: any) => {console.log(response); setToast(response.status);})
+         .then((response: any) => {console.log(response); setToastSuc();})
          .catch((err: Error) => {
-            console.log("ops! ocorreu um erro" + setToast(err));
+            console.log("ops! ocorreu um erro" + setToastError());
         });
     }
 
-    const setToast = (status: any) => {
-        if(status === 201){
+    
+    useEffect(() => {
+        if(isSubmitSuccessful){
+            reset({ usuario: "", senha: "", email: "", permissao: ""})
+        }
+    }, [isSubmitSuccessful, reset])
+
+    const setToastSuc = () => {
             toast({
                 id: "toast1",
                 position: "top-right",
@@ -37,7 +43,9 @@ export default function CreateUserComponent() {
                 title: "Usuario criado!",
                 description: "Vá para a lista de usuario para visualizar!",
             });
-        } else if(status.response.status === 400){
+    }
+
+    const setToastError = () => {
             toast({
                 id: "toast2",
                 position: "top-right",
@@ -45,9 +53,7 @@ export default function CreateUserComponent() {
                 title: "Dados ja existentes!",
                 description: "Usuario e/ou email já cadastrados!",
             });
-        }
     }
-
 
     return (
         <SidebarWithHeader>

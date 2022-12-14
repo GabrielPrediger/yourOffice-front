@@ -40,6 +40,7 @@ const usePicasso = () => {
 			clienteCard: useColorModeValue("#dfbda1", "#4A5568"),
 			userCard: useColorModeValue("#dfbda1", "#4A5568"),
 			typeCard: useColorModeValue("#dfbda1", "#4A5568"),
+			inputDefault: useColorModeValue("#CBD5E0", "#CBD5E0"), 
 		},
 		colors: {
 			black: useColorModeValue("black", "black"),
@@ -52,6 +53,10 @@ const usePicasso = () => {
 		},
 		boxShadow: {
 			header: useColorModeValue("0px -9px 37px 15px rgba(0,0,0,0.37)", "0px -9px 37px 15px rgb(94 94 94 / 18%)")
+		},
+		images: {
+			landingGetStarted: useColorModeValue("financial.gif", "financialDark.png"),
+			landingAboutUs: useColorModeValue("us.gif", "usDark.png")	
 		}
 
 	}

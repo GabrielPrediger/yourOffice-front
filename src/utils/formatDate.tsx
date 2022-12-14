@@ -1,7 +1,7 @@
 import moment from 'moment';
 
 export const formatDate = (value: number | undefined | string) => {
-    const valor = moment(value).format('DD/MM/YYYY');
+    const valor = moment(value).add(1, "days").format('DD/MM/YYYY');
 
     return valor
 }

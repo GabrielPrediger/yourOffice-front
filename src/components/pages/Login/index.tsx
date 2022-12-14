@@ -18,6 +18,7 @@ import { useAuth } from '../../../hooks/useAuth';
 import { usePicasso } from '../../../hooks/usePicasso'
 import { useUserLogged } from '../../../hooks/useUserLogged';
 import api from '../../../services/api';
+import { useToasty } from '../../Tooltip';
 
 
 const LoginComponent = () => {
@@ -28,17 +29,29 @@ const LoginComponent = () => {
   const { setLogged } = useUserLogged()
   const navigate = useNavigate()
   const { colorMode, toggleColorMode } = useColorMode();
+  const { toast } = useToasty();
 
   const onSubmitForm = (data: any) => {
     setLogged(data.usuario)
     api
         .post("/login", { usuario: data.usuario, senha: data.senha })
-        .then((response: any) => {setToken(response.data.token); setRefreshToken(response.data.refreshToken); navigate('/inicio');})
+        .then((response: any) => {console.log(response.data.refreshToken);setToken(response.data.token); setRefreshToken(response.data.refreshToken); navigate('/inicio');})
         .catch((err: any) => {
             console.error("ops! ocorreu um erro" + setLogged(''));
+            setToastError();
         });
   }
 
+const setToastError = () => {
+    toast({
+        id: "toastDeleteEntrada",
+        position: "top-right",
+        status: "error",
+        title: "Erro ao efetuar o login!",
+        description: "Usuario ou senha estão errados.",
+    });
+}
+  
   return (
     <Flex
       minW={'max'}

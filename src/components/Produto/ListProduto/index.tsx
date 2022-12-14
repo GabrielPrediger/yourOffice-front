@@ -134,7 +134,7 @@ export default function ListProduto() {
             });
         }
         // eslint-disable-next-line
-    }, [filtro]);
+    }, [filtro, produto, produtoSliced]);
 
     const handleCheckbox = (value: string) => {
             const isFiltering = filters.includes(value);
@@ -159,7 +159,7 @@ export default function ListProduto() {
                     <Text w="max-content">Voltar</Text>
                 </Flex>
             </Link>
-            <Flex justifyContent="space-between" px="6rem" pt="10">
+            <Flex w="100%" justifyContent={["center","center","center","space-between"]} px={["10rem","6rem","6rem","6rem"]} gap="5" pt="10" flexWrap={"wrap"}>
                 <Flex>
                     <Menu>
                         <MenuButton 
@@ -183,7 +183,7 @@ export default function ListProduto() {
 
                     </Menu>
                 </Flex>
-                <Flex justifyContent="flex-end" pr="210">
+                <Flex justifyContent="flex-end">
                     <Stack spacing={5} direction='row'>
                         <Checkbox colorScheme='orange' value="Venda" onChange={() => handleCheckbox('Venda')}>
                             Venda
