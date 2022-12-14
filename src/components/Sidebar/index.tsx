@@ -17,9 +17,10 @@ import {
   FlexProps,
   Menu,
   MenuButton,
-  MenuDivider,
   MenuItem,
   MenuList,
+  Button,
+  useColorMode,
 } from '@chakra-ui/react';
 import {
   FiHome,
@@ -37,25 +38,32 @@ import {
 } from 'react-icons/hi';
 import {
   BsSortDown,
-  BsSortUp
+  BsSortUp,
+  BsSun
 } from 'react-icons/bs';
 import { IconType } from 'react-icons';
 import { ReactText } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom';
+import { useUserLogged } from '../../hooks/useUserLogged';
+import { useAuth } from '../../hooks/useAuth';
+import { MdNightlightRound } from 'react-icons/md';
+import { usePicasso } from '../../hooks/usePicasso';
+import { authRoutes } from '../../routes';
 
 interface LinkItemProps {
   name: string;
   icon: IconType;
   link?: any;
+  relatedLinks?: string[];
 }
 const LinkItems: Array<LinkItemProps> = [
   { name: 'Home', icon: FiHome, link: '/inicio' },
-  { name: 'Graficos', icon: FiTrendingUp },
-  { name: 'Vendas', icon: BsSortUp, link: '/entradas' },
-  { name: 'Despesas', icon: BsSortDown, link: '/saidas' },
-  { name: 'Produtos', icon: FiBox, link: '/produtos' },
-  { name: 'Clientes', icon: HiOutlineUsers, link: '/clientes' },
-  { name: 'Usuarios', icon: AiOutlineUser, link: '/usuarios' },
+  // { name: 'Graficos', icon: FiTrendingUp, link: '/charts' },
+  { name: 'Entradas', icon: BsSortUp, link: '/entradas', relatedLinks: ['/criar-entrada', '/listar-entradas', '/editar-entrada'] },
+  { name: 'Despesas', icon: BsSortDown, link: '/saidas', relatedLinks: ['/criar-saida', '/listar-saidas', '/editar-saida'] },
+  { name: 'Produtos', icon: FiBox, link: '/produtos', relatedLinks: ['/criar-produto', '/listar-produtos', '/editar-produto'] },
+  { name: 'Clientes', icon: HiOutlineUsers, link: '/clientes', relatedLinks: ['/criar-cliente', '/listar-cliente', '/editar-cliente'] },
+  { name: 'Usuarios', icon: AiOutlineUser, link: '/usuarios', relatedLinks: ['/criar-usuario', '/listar-usuario', '/editar-usuario'] },
 ];
 
 export default function SidebarWithHeader({
@@ -96,6 +104,11 @@ interface SidebarProps extends BoxProps {
 }
 
 const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
+
+  const { isOpen, onToggle } = useDisclosure()
+  const navigate = useNavigate()
+  const theme = usePicasso()
+
   return (
     <Box
       transition="3s ease"
@@ -107,16 +120,17 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
       h="full"
       {...rest}>
       <Flex h="20" alignItems="center" mx="8" justifyContent="space-between">
-        <Text fontSize="2xl" fontFamily="monospace" fontWeight="bold">
+        <Text transition={"0.5s"} _hover={{ color: theme.colors.brown}} cursor={"pointer"} fontSize="2xl" fontFamily="monospace" fontWeight="bold" onClick={() => navigate('/inicio')}>
           yourOffice
         </Text>
         <CloseButton display={{ base: 'flex', md: 'none' }} onClick={onClose} />
       </Flex>
       {LinkItems.map((link) => (
-        <NavItem key={link.name} icon={link.icon} link={link.link}>
+        <NavItem key={link.name} icon={link.icon} link={link.link} onClick={onToggle} relatedLinks={link?.relatedLinks as string[]}>
           {link.name}
         </NavItem>
       ))}
+
     </Box>
   );
 };
@@ -124,20 +138,39 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
 interface NavItemProps extends FlexProps {
   icon: IconType;
   link: any;
+  relatedLinks: string[];
   children: ReactText;
 }
-const NavItem = ({ icon, link, children, ...rest }: NavItemProps) => {
+const NavItem = ({ icon, link, relatedLinks, children, ...rest }: NavItemProps) => {
+  const theme = usePicasso()
+  const {pathname} = useLocation()
+
+  const pathnameThreatedSlashed = pathname.substring(
+    pathname.indexOf('/'),
+    pathname.lastIndexOf('/')
+  )
+
+  const validatePathCountOfSlash = pathname.split('/').length - 1
+
+  const bgColorValidation = validatePathCountOfSlash === 2 ? relatedLinks?.includes(pathnameThreatedSlashed) : relatedLinks?.includes(pathname)
+
   return (
     <Link to={link} style={{ textDecoration: 'none' }}>
       <Flex
         align="center"
         p="4"
         mx="4"
+        my="1"
+        colo
+        bgColor={(bgColorValidation || pathname === link) ? theme.background.navItem : 'transparent'}
         borderRadius="lg"
         role="group"
         cursor="pointer"
+        transition="0.3s"
+        fontWeight={(bgColorValidation || pathname === link) ? '600' : '400'}
+        color={theme.colors.blackWhite}
         _hover={{
-          bg: '#e2d1c3',
+          bg: theme.background.navItem,
           color: 'white'
         }}
         {...rest}>
@@ -162,13 +195,21 @@ interface MobileProps extends FlexProps {
 }
 
 const Sidebar = ({ onOpen, ...rest }: MobileProps) => {
+
+  const { logged, handleDisconnect } = useUserLogged()
+  const str = logged
+  const nome = str?.charAt(0).toUpperCase() + str?.slice(1);
+  const { colorMode, toggleColorMode } = useColorMode();
+  const theme = usePicasso()
+  const navigate = useNavigate()
+
   return (
     <Flex
       ml={{ base: 0, md: 60 }}
       px={{ base: 4, md: 4 }}
       height="20"
       alignItems="center"
-      bg={'linear-gradient(135deg, #fdfcfb 0%, #e2d1c3 100%);'}
+      bg={theme.background.siderBar}
       borderBottomWidth="1px"
       borderBottomColor={useColorModeValue('gray.200', 'gray.700')}
       justifyContent={{ base: 'space-between', md: 'flex-end' }}
@@ -180,22 +221,19 @@ const Sidebar = ({ onOpen, ...rest }: MobileProps) => {
         aria-label="open menu"
         icon={<FiMenu />}
       />
-
-      <Text
-        display={{ base: 'flex', md: 'none' }}
-        fontSize="2xl"
-        fontFamily="monospace"
-        fontWeight="bold">
-        yourOffice
-      </Text>
-
+        <Text
+          display={{ base: 'flex', md: 'none' }}
+          fontSize="2xl"
+          fontFamily="monospace"
+          fontWeight="bold"
+          onClick={() => navigate('/inicio')}
+        >
+          yourOffice
+        </Text>
       <HStack spacing={{ base: '0', md: '6' }}>
-        <IconButton
-          size="lg"
-          variant="ghost"
-          aria-label="open menu"
-          icon={<FiBell />}
-        />
+        <Button onClick={toggleColorMode} bg="transparent" _hover={{ opacity: 0.9}} color='white'>
+            {colorMode === 'light' ? <MdNightlightRound size={24} /> : <BsSun size={24} />}
+        </Button>
         <Flex alignItems={'center'}>
           <Menu>
             <MenuButton
@@ -214,10 +252,7 @@ const Sidebar = ({ onOpen, ...rest }: MobileProps) => {
                   alignItems="flex-start"
                   spacing="1px"
                   ml="2">
-                  <Text fontSize="sm">Prediger</Text>
-                  <Text fontSize="xs" color="gray.600">
-                    Admin
-                  </Text>
+                  <Text fontSize="sm">{nome}</Text>
                 </VStack>
                 <Box display={{ base: 'none', md: 'flex' }}>
                   <FiChevronDown />
@@ -227,8 +262,10 @@ const Sidebar = ({ onOpen, ...rest }: MobileProps) => {
             <MenuList
               bg={useColorModeValue('white', 'gray.900')}
               borderColor={useColorModeValue('gray.200', 'gray.700')}
-            >
-              <MenuItem>Sign out</MenuItem>
+            > 
+              <Link to='/' onClick={() => handleDisconnect()}>
+                <MenuItem>Sign out</MenuItem>
+              </Link>
             </MenuList>
           </Menu>
         </Flex>

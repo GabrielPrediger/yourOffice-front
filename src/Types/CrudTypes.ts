@@ -6,8 +6,16 @@ export interface ICreateUser {
 }
 
 export interface ICreateSaidas {
+    id: number
     valor: number;
-    data: Date;
+    data: number;
+    descricao: string;
+}
+
+export interface ISaidas {
+    id: number;
+    valor: number;
+    data: number;
     descricao: string;
 }
 
@@ -22,13 +30,16 @@ export interface ICreateProduct {
 }
 
 export interface ICreateEntrada {
-    id?: any;
+    id?: number;
     tipoVenda: string;
-    data: string;
+    data: number;
     descricao: string;
     valor: number;
     clienteId: any;
-    produtoId: any;
+    produtos: [];
+    data_inicio_aluguel?: number; 
+    data_fim_aluguel?: number;
+    isAtrasado?: boolean;
 }
 
 export interface ICreateCliente {

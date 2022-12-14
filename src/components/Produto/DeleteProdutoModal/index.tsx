@@ -1,12 +1,51 @@
 import { Button, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Text } from "@chakra-ui/react";
+import { useAuth } from "../../../hooks/useAuth";
+import api from "../../../services/api";
+import { useToasty } from "../../Tooltip";
 
 interface IModal {
+    id: number;
     isOpen: boolean;
     onClose: () => void;
 }
 
 export const DeleteProdutoModalComponent: React.FC<IModal> = props => {
-    const { isOpen, onClose } = props;
+    const { id, isOpen, onClose } = props;
+    const { toast } = useToasty();
+    const { token } = useAuth()
+
+    const onDelete = () => {
+        api
+        .delete(`/delete-produto/${Number(id)}`, {headers: {
+            Authorization: `Bearer ${token}`
+         }})
+        .then((response) => {console.log('Produto deletado!'); setToastSuc()
+    },)
+        .catch((err) => {
+        console.error("ops! ocorreu um erro" + setToastError());
+        });
+        onClose()
+    }
+
+    const setToastSuc = () => {
+        toast({
+            id: "toastDeleteProduto",
+            position: "top-right",
+            status: "success",
+            title: "Dados deletados!",
+            description: "Produto deletado com sucesso!",
+        });
+    }
+
+    const setToastError = () => {
+        toast({
+            id: "toastDeleteProduto",
+            position: "top-right",
+            status: "error",
+            title: "Impossivel deletar!",
+            description: "Produto está registrado em uma venda",
+        });
+    }
 
     return (
 
@@ -22,7 +61,7 @@ export const DeleteProdutoModalComponent: React.FC<IModal> = props => {
                 </ModalBody>
 
                 <ModalFooter justifyContent="center">
-                    <Button bgColor="#F56565" color="white" _hover={{ opacity: 0.8 }}>Excluir</Button>
+                    <Button onClick={onDelete} bgColor="#F56565" color="white" _hover={{ opacity: 0.8 }}>Excluir</Button>
                 </ModalFooter>
             </ModalContent>
         </Modal>

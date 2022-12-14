@@ -1,8 +1,12 @@
-import { Box, Heading, Text, Button } from '@chakra-ui/react';
+import { Box, Heading, Text, Button, Flex } from '@chakra-ui/react';
+import { useNavigate } from 'react-router-dom';
 
 const PageNotFound = () => {
+  const navigate = useNavigate()
+
+
   return (
-    <Box textAlign="center" py={10} px={6} justifyContent="center" alignItems="center" w="100%">
+    <Flex flexDir="column" textAlign="center" py={10} px={6} justifyContent="center" alignItems="center" w="100vw" h="100vh">
       <Heading
         display="inline-block"
         as="h2"
@@ -22,6 +26,7 @@ const PageNotFound = () => {
         colorScheme="teal"
         bg="#dfbda1"
         color="white"
+        onClick={() => navigate("/")}
         variant="solid"
         _hover={{
           bg: '#dfbda1',
@@ -29,7 +34,7 @@ const PageNotFound = () => {
         }}>
         Voltar
       </Button>
-    </Box>
+    </Flex>
   );
 }
 
