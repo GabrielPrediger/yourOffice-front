@@ -1,4 +1,5 @@
 import { Button, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Text } from "@chakra-ui/react";
+import { useAuth } from "../../../hooks/useAuth";
 import api from "../../../services/api";
 import { useToasty } from "../../Tooltip";
 
@@ -11,15 +12,18 @@ interface IModal {
 export const DeleteClienteModalComponent: React.FC<IModal> = props => {
     const { id, isOpen, onClose } = props;
     const { toast } = useToasty();
+    const { token } = useAuth()
 
     const onEditForm = () => {
         api
-        .delete(`/delete-cliente/${Number(id)}`)
-        .then((response) => {console.log('User deletado!'); setToast(response.status)},)
-        .catch((err: Error) => {
-        console.error("ops! ocorreu um erro" + err);
-        setToast(err)
-        });
+        .delete(`/delete-cliente/${Number(id)}` , {headers: {
+            Authorization: `Bearer ${token}`
+         }})
+         .then((response) => {console.log('User deletado!'); setToast(response.status)},)
+         .catch((err: Error) => {
+            console.error("ops! ocorreu um erro" + err);
+            setToast(err)
+            });
         onClose()
     }
 

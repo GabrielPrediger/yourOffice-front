@@ -1,10 +1,13 @@
 import { Button, Flex, Image, Input, Select, Stack, Text } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import { FiArrowLeft } from "react-icons/fi";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../../../hooks/useAuth";
+import { usePicasso } from "../../../hooks/usePicasso";
 import api from "../../../services/api";
 import SidebarWithHeader from "../../Sidebar";
 import { useToasty } from "../../Tooltip";
+import { useEffect } from 'react'
 
 interface IProduct {
     id?: number;
@@ -18,8 +21,10 @@ interface IProduct {
 
 export default function CreateProdutoComponent() {
 
-    const { register, handleSubmit } = useForm();
+    const { register, handleSubmit, reset, formState: {isSubmitSuccessful} } = useForm();
     const { toast } = useToasty();
+    const { token } = useAuth()
+    const theme = usePicasso();
 
     function convertImageToBase64(file: File) {
         return new Promise((resolve, reject) => {
@@ -32,15 +37,22 @@ export default function CreateProdutoComponent() {
     }
 
     const onSubmitForm = async (data: IProduct | any) => {
-        console.log(data.foto[0].size > 50000000)
         const request = { nome: data.nome, descricao: data.descricao, quantidade: data.quantidade, tipo: data.tipo, foto: await convertImageToBase64(data.foto[0]), preco: data.preco}
         api
-            .post("/create-produto", request)
-            .then((response: any) => {console.log(response, 'foi'); setToast(response);})
-            .catch((err: any) => {
+            .post("/create-produto",  request, {headers: {
+                Authorization: `Bearer ${token}`
+             }})
+             .then((response: any) => {console.log(response, 'foi'); setToast(response);})
+             .catch((err: any) => {
                 console.error("ops! ocorreu um erro" + setToast(err));
             });
     }
+
+    useEffect(() => {
+        if(isSubmitSuccessful){
+            reset({ nome: "", descricao: "", quantidade: "", tipo: "", foto: "", preco: ""})
+        }
+    }, [isSubmitSuccessful, reset])
 
     const setToast = (status: any) => {
         console.log(status)
@@ -70,7 +82,7 @@ export default function CreateProdutoComponent() {
             <Flex justifyContent="center" alignItems="center">
                 <Flex flexDirection="column" gap="10" p="10">
                     <Link to="/produtos" style={{ width: "max-content" }}>
-                        <Flex align="center" gap="2">
+                        <Flex align="center" gap="2" transition="0.5s" _hover={{ opacity: 0.4 }}>
                             <Image as={FiArrowLeft} size={24} />
                             <Text w="max-content">Voltar</Text>
                         </Flex>
@@ -78,15 +90,15 @@ export default function CreateProdutoComponent() {
                     <form onSubmit={handleSubmit(onSubmitForm)}>
                         <Flex flexDirection="column" gap="2" pb="5">
                             <Text>Nome</Text>
-                            <Input w="25rem" h="max" py="2" size={"lg"} type="text" {...register("nome")} />
+                            <Input placeholder="Digite aqui um nome..." _placeholder={{ color: "#A0AEC0"}} w="25rem" h="max" py="2" size={"lg"} type="text" {...register("nome")} />
                         </Flex>
                         <Flex flexDirection="column" gap="2" pb="5">
                             <Text>Descrição</Text>
-                            <Input w="25rem" h="max" py="2" size={"lg"} type="text" {...register("descricao")} />
+                            <Input placeholder="Digite aqui uma descrição..." _placeholder={{ color: "#A0AEC0"}} w="25rem" h="max" py="2" size={"lg"} type="text" {...register("descricao")} />
                         </Flex>
                         <Flex flexDirection="column" gap="2" pb="5">
                             <Text>Quantidade</Text>
-                            <Input w="25rem" h="max" py="2" size={"lg"} type="number" {...register("quantidade")} />
+                            <Input placeholder="Digite aqui uma quantidade..." _placeholder={{ color: "#A0AEC0"}} w="25rem" h="max" py="2" size={"lg"}  {...register("quantidade")} />
                         </Flex>
                         <Flex flexDirection="column" gap="2" pb="5">
                             <Text>Tipo</Text>
@@ -99,19 +111,24 @@ export default function CreateProdutoComponent() {
                         </Flex>
                         <Flex flexDirection="column" gap="2" pb="5">
                             <Text>Foto</Text>
-                            <Input w="25rem" h="max" py="2" size={"lg"} type="file" {...register("foto")} />
+                            <Input placeholder="Escolhe uma foto..." _placeholder={{ color: "#A0AEC0"}} w="25rem" h="max" py="2" size={"lg"} type="file" {...register("foto")} />
                         </Flex>
                         <Flex flexDirection="column" gap="2" pb="5">
                             <Text>Preço</Text>
-                            <Input w="25rem" h="max" py="2" size={"lg"} type="number" {...register("preco")} />
+                            <Input placeholder="Digite aqui um valor..." _placeholder={{ color: "#A0AEC0"}} w="25rem" h="max" py="2" size={"lg"} {...register("preco")} />
                         </Flex>
-                        <Button bg={'#dfbda1'}
-                            color={'white'}
+                        <Button 
+                            w="100%"
                             type="submit"
+                            bgColor={theme.background.criarButton}
+                            color={'white'}
+                            transition="0.5s"
                             _hover={{
-                                bg: '#dfbda1',
-                                opacity: 0.5
-                            }}>Criar</Button>
+                                opacity: 0.7,
+                            }}
+                        >
+                            Criar
+                        </Button>
                     </form>        
                 </Flex>
             </Flex>

@@ -6,15 +6,17 @@ import SidebarWithHeader from "../../Sidebar";
 import { useForm } from "react-hook-form";
 import api from "../../../services/api";
 import { useToasty } from "../../Tooltip";
+import { useAuth } from "../../../hooks/useAuth";
+import { usePicasso } from "../../../hooks/usePicasso";
 
 interface IProduct {
     id?: number;
-    nome: string;
-    descricao: string;
-    quantidade: number;
-    tipo: string; //alugar ou vender
+    nome?: string;
+    descricao?: string;
+    quantidade?: number;
+    tipo?: string; //alugar ou vender
     foto?: string;
-    preco: number;
+    preco?: number;
 }
 
 const select_options = [{id: 1, value: 'Aluguel'}, {id: 2, value: 'Venda'}]
@@ -23,18 +25,18 @@ const select_options = [{id: 1, value: 'Aluguel'}, {id: 2, value: 'Venda'}]
 export default function EditarProdutoComponent() {
 
     const { toast } = useToasty();
-
+    const theme = usePicasso();
     const [editProduto, setEditProduto] = useState<IProduct>();
     const { id } = useParams();
     const { register, handleSubmit, reset } = useForm({defaultValues: editProduto });
+    const { token } = useAuth()
 
     function convertImageToBase64(file: File) {
         return new Promise((resolve, reject) => {
             const fileReader = new FileReader();
+            console.log(file, 'fle')
             fileReader.readAsDataURL(file)
-
             fileReader.onload = () => resolve(fileReader.result)
-            setToast(2);
             fileReader.onerror = (err) => { reject(err); }
             
         })
@@ -42,19 +44,24 @@ export default function EditarProdutoComponent() {
 
     useEffect(() => {
         api
-            .get(`/produto/${Number(id)}`)
+            .get(`/produto/${Number(id)}`, {headers: {
+                Authorization: `Bearer ${token}`
+             }})
             .then((response) => {setEditProduto(response.data); reset(response.data);})
             .catch((err) => {
             console.error("ops! ocorreu um erro" + err);
             });
-    }, [id, reset]);
+    }, [id, reset, token]);
 
     const onEditForm = async (data: any) => {
+        console.log(data, 'dataaaaaaaa');
         const request = { nome: data.nome, descricao: data.descricao, quantidade: data.quantidade, tipo: data.tipo, foto: await convertImageToBase64(data.foto[0]), preco: data.preco}
         api
-            .put(`/update-produto/${Number(id)}`, request)
-            .then((response) => {console.log(response, 'Foi!'); setToast(1)})
-            .catch((err: Error) => {
+            .put(`/update-produto/${Number(id)}`, request, {headers: {
+                Authorization: `Bearer ${token}`
+             }})
+             .then((response) => {console.log(response, 'Foi!'); setToast(1)})
+             .catch((err: Error) => {
                 console.error("ops! ocorreu um erro" + setToast(2));
         });
     }
@@ -86,7 +93,7 @@ export default function EditarProdutoComponent() {
             <Flex justifyContent="center" alignItems="center">
                 <Flex flexDirection="column" gap="10" p="10">
                     <Link to="/listar-produtos" style={{ width: "max-content" }}>
-                        <Flex align="center" gap="2">
+                        <Flex align="center" gap="2" transition="0.5s" _hover={{ opacity: 0.4 }}>
                             <Image as={FiArrowLeft} size={24} />
                             <Text w="max-content">Voltar</Text>
                         </Flex>
@@ -115,20 +122,24 @@ export default function EditarProdutoComponent() {
                             </Stack>
                         </Flex>
                         <Flex flexDirection="column" gap="2" pb="5">
-                            <Text>Foto</Text>
+                        <Text>Foto</Text>
                             <Input w="25rem" h="max" py="2" size={"lg"} type="file" defaultValue={editProduto?.foto} {...register("foto")} />
                         </Flex>
                         <Flex flexDirection="column" gap="2" pb="5">
                             <Text>Preço</Text>
                             <Input w="25rem" h="max" py="2" size={"lg"}  defaultValue={editProduto?.preco} {...register("preco")} />
                         </Flex>
-                        <Button bg={'#dfbda1'}
-                            color={'white'}
+                        <Button 
                             type="submit"
+                            bgColor={theme.background.criarButton}
+                            color={'white'}
+                            transition="0.5s"
                             _hover={{
-                                bg: '#dfbda1',
-                                opacity: 0.5
-                            }}>Salvar</Button>
+                                opacity: 0.7,
+                            }}
+                        >
+                            Salvar
+                        </Button>
                     </form>
                 </Flex>
             </Flex>

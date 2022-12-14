@@ -4,9 +4,12 @@ import { FiArrowLeft } from "react-icons/fi";
 import { Link, useParams } from "react-router-dom";
 import { usePicasso } from "../../../hooks/usePicasso";
 import SidebarWithHeader from "../../Sidebar";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import api from "../../../services/api";
+import { useAuth } from "../../../hooks/useAuth";
 import { useToasty } from "../../Tooltip";
+import InputMask from "react-input-mask";
+import { formatDate } from "../../../utils/formatDate";
 
 interface IUser {
     id: number;
@@ -20,24 +23,28 @@ interface IUser {
 export default function EditarClienteComponent() {
 
     const theme = usePicasso();
-
+    const { token } = useAuth()
+    const { toast } = useToasty();
     const [editCliente, setEditCliente] = useState<IUser>();
     const { id } = useParams();
-    const { register, handleSubmit, reset } = useForm({defaultValues: editCliente });
-    const { toast } = useToasty();
+    const { register, handleSubmit, reset, control } = useForm({defaultValues: editCliente });
 
     useEffect(() => {
         api
-            .get(`/cliente/${Number(id)}`)
+            .get(`/cliente/${Number(id)}`, {headers: {
+                Authorization: `Bearer ${token}`
+             }})
             .then((response) => {setEditCliente(response.data); reset(response.data);})
             .catch((err) => {
             console.error("ops! ocorreu um erro" + err);
             });
-    }, [id, reset]);
+    }, [id, reset, token]);
 
     const onEditForm = (data: any) => {
         api
-            .put(`/update-cliente/${Number(id)}`, data)
+            .put(`/update-cliente/${Number(id)}`, data, {headers: {
+                Authorization: `Bearer ${token}`
+            }})
             .then((response) => {console.log(response, 'Foi!'); setToast()})
             .catch((err) => {
                 console.error("ops! ocorreu um erro" + err);
@@ -59,7 +66,7 @@ export default function EditarClienteComponent() {
             <Flex justifyContent="center" alignItems="center">
                 <Flex flexDirection="column" gap="10" p="10">
                     <Link to="/listar-cliente" style={{ width: "max-content" }}>
-                        <Flex align="center" gap="2">
+                        <Flex align="center" gap="2" transition="0.5s" _hover={{ opacity: 0.4 }}>
                             <Image as={FiArrowLeft} size={24} />
                             <Text w="max-content">Voltar</Text>
                         </Flex>
@@ -70,12 +77,23 @@ export default function EditarClienteComponent() {
                             <Input w="25rem" h="max" py="2" size={"lg"} defaultValue={editCliente?.nome} {...register("nome")} />
                         </Flex>
                         <Flex flexDirection="column" gap="2" pb="4">
-                            <Text>Data de nascimento</Text>
+                            <Flex gap="2">
+                                    <Text>Data de nascimento</Text>
+                                    <Text fontSize={"md"} fontWeight={500}>{formatDate(String(editCliente?.data_nascimento))}</Text>
+                                </Flex>  
                             <Input w="25rem" h="max" py="2" size={"lg"} type="date" defaultValue={editCliente?.data_nascimento} {...register("data_nascimento")} />
                         </Flex>
                         <Flex flexDirection="column" gap="2" pb="4">
-                            <Text>CPF/CNPJ</Text>
-                            <Input w="25rem" h="max" py="2" size={"lg"} defaultValue={editCliente?.cpf_cnpj} {...register("cpf_cnpj")} />
+                            <Text>CPF</Text>
+                            <Controller
+                                control={control}    
+                                name="cpf_cnpj"
+                                render={({ onChange, value }: any) => (
+                                    <InputMask mask="999.999.999-99" defaultValue={editCliente?.cpf_cnpj}  {...register("cpf_cnpj")} style={{ fontSize:"1.15rem", padding: '0.7rem 1rem', border: '1px solid', borderRadius: "6px", borderColor: theme.border.inputDefault}}>
+    
+                                    </InputMask>
+                                )}                       
+                            />
                         </Flex>
                         <Flex flexDirection="column" gap="2" pb="4">
                             <Text>RG</Text>
@@ -86,14 +104,15 @@ export default function EditarClienteComponent() {
                             <Input w="25rem" h="max" py="2" size={"lg"} defaultValue={editCliente?.endereco} {...register("endereco")} />
                         </Flex>
                         <Button 
-                            bg={'#dfbda1'}
                             type="submit"
+                            bgColor={theme.background.criarButton}
                             color={'white'}
+                            transition="0.5s"
                             _hover={{
-                                bg: '#dfbda1',
-                                opacity: 0.5
-                            }}>
-                                Salvar
+                                opacity: 0.7,
+                            }}
+                        >
+                            Salvar
                         </Button>
                     </form>
                 </Flex>

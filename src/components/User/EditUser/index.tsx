@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { FiArrowLeft } from "react-icons/fi";
 import { Link, useParams } from "react-router-dom";
+import { useAuth } from "../../../hooks/useAuth";
+import { usePicasso } from "../../../hooks/usePicasso";
 import api from "../../../services/api";
 import SidebarWithHeader from "../../Sidebar";
 import { useToasty } from "../../Tooltip";
@@ -23,22 +25,28 @@ export default function EditUserComponent() {
     const { id } = useParams();
     const { register, handleSubmit, reset } = useForm({defaultValues: editUser});
     const { toast } = useToasty();
+    const { token } = useAuth()
+    const theme = usePicasso();
 
     useEffect(() => {
         api
-            .get(`/get-user-id/${Number(id)}`)
+            .get(`/get-user-id/${Number(id)}`, {headers: {
+                Authorization: `Bearer ${token}`
+             }})
             .then((response) => {setEditUser(response.data); reset(response.data)})
             .catch((err) => {
             console.error("ops! ocorreu um erro" + err);
             });
-    }, [id, reset]);
+    }, [id, reset, token]);
 
 
     const onEditForm = (data: any) => {
         api
-            .put(`/update-user/${Number(id)}`, data)
-            .then((response) => {console.log(response, 'Foi!'); setToast()})
-            .catch((err: Error) => {
+            .put(`/update-user/${Number(id)}`, data, {headers: {
+                Authorization: `Bearer ${token}`
+             }})
+             .then((response) => {console.log(response, 'Foi!'); setToast()})
+             .catch((err: Error) => {
                 console.error("ops! ocorreu um erro" + err);
             });
     }
@@ -59,7 +67,7 @@ export default function EditUserComponent() {
             <Flex justifyContent="center" alignItems="center">
                 <Flex flexDirection="column" gap="10" p="10" >
                     <Link to="/listar-usuario" style={{ width: "max-content" }}>
-                        <Flex align="center" gap="2">
+                        <Flex align="center" gap="2" transition="0.5s" _hover={{ opacity: 0.4 }}>
                             <Image as={FiArrowLeft} size={24} />
                             <Text w="max-content">Voltar</Text>
                         </Flex>
@@ -71,7 +79,7 @@ export default function EditUserComponent() {
                         </Flex>
                         <Flex flexDirection="column" gap="2" py="2">
                             <Text>Senha</Text>
-                            <Input w="25rem" h="max" py="2" size={"lg"} defaultValue={editUser?.senha} {...register("senha")} />
+                            <Input w="25rem" h="max" py="2" size={"lg"} defaultValue='' type="password" {...register("senha")} />
                         </Flex>
                         <Flex flexDirection="column" gap="2" py="2">
                             <Text>Email</Text>
@@ -80,21 +88,24 @@ export default function EditUserComponent() {
                         <Flex flexDirection="column" gap="2" py="2">
                             <Text>Permissão</Text>
                             <Stack spacing={3}>
-                                <Select variant='outline' placeholder='Escolha uma opção...' {...register("permissao")}>
+                                <Select variant='outline' placeholder='Escolha uma opção...' defaultValue={editUser?.permissao} {...register("permissao")}>
                                     {select_options.map(options =>
                                        <option key={options.id} value={options.value} selected={options.value.toLowerCase() === editUser?.permissao} color="black">{options.value}</option>
                                     )}
                                 </Select>
                             </Stack>
                         </Flex>
-                        <Button bg={'#dfbda1'}
+                        <Button 
+                            bgColor={theme.background.criarButton}
                             color={'white'}
                             type="submit"
-                            mt="2"
+                            transition="0.5s"
                             _hover={{
-                                bg: '#dfbda1',
-                                opacity: 0.5
-                            }}>Salvar</Button>
+                                opacity: 0.7,
+                            }}
+                        >
+                            Salvar
+                        </Button>
                     </form>
                 </Flex>
             </Flex>
